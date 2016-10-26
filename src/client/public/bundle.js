@@ -93,7 +93,6 @@
 	
 	        _store2.default.subscribe(_this.onNewData.bind(_this));
 	        _this.state = _store2.default.getState();
-	        _this.send = _this.send.bind(_this);
 	        return _this;
 	    }
 	
@@ -107,18 +106,6 @@
 	            });
 	        }
 	    }, {
-	        key: 'send',
-	        value: function send() {
-	            _store2.default.dispatch({ type: _storeConstants2.default.events.ENTRY_ADDED, data: {
-	                    id: 555,
-	                    likes: 555,
-	                    postTitle: 'wow',
-	                    username: 'Sztymel',
-	                    views: 10000,
-	                    created: 'Wed Oct 26 2016 08:23:45'
-	                } });
-	        }
-	    }, {
 	        key: 'render',
 	        value: function render() {
 	            return _react2.default.createElement(
@@ -127,17 +114,12 @@
 	                _react2.default.createElement(
 	                    'h1',
 	                    { className: 'header-root' },
-	                    'User List for Callstack'
+	                    'User List'
 	                ),
 	                _react2.default.createElement(
 	                    'div',
 	                    { className: 'toolbar-root' },
-	                    _react2.default.createElement(_userListFormComponent2.default, null),
-	                    _react2.default.createElement(
-	                        'button',
-	                        { onClick: this.send },
-	                        'Add entry'
-	                    )
+	                    _react2.default.createElement(_userListFormComponent2.default, null)
 	                ),
 	                _react2.default.createElement(_userListComponent2.default, { tableHeaders: this.state.tableHeaders, tableData: this.state.tableData })
 	            );
@@ -22223,7 +22205,7 @@
   \***************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
+	'use strict';
 	
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
@@ -22234,6 +22216,14 @@
 	var _react = __webpack_require__(/*! react */ 1);
 	
 	var _react2 = _interopRequireDefault(_react);
+	
+	var _store = __webpack_require__(/*! ../store/store.js */ 176);
+	
+	var _store2 = _interopRequireDefault(_store);
+	
+	var _storeConstants = __webpack_require__(/*! ../store/store-constants.js */ 193);
+	
+	var _storeConstants2 = _interopRequireDefault(_storeConstants);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -22249,26 +22239,82 @@
 	    function userListForm() {
 	        _classCallCheck(this, userListForm);
 	
-	        return _possibleConstructorReturn(this, (userListForm.__proto__ || Object.getPrototypeOf(userListForm)).apply(this, arguments));
+	        var _this = _possibleConstructorReturn(this, (userListForm.__proto__ || Object.getPrototypeOf(userListForm)).call(this));
+	
+	        _this.send = _this.send.bind(_this);
+	        _this.handleUsernameChange = _this.handleUsernameChange.bind(_this);
+	        _this.handlePostTitleChange = _this.handlePostTitleChange.bind(_this);
+	        _this.state = {
+	            username: '',
+	            postTitle: ''
+	        };
+	        return _this;
 	    }
 	
 	    _createClass(userListForm, [{
-	        key: "render",
+	        key: 'send',
+	        value: function send() {
+	            console.log('this.state.postTitle', this.state.postTitle);
+	            if (!this.state.username || !this.state.postTitle) return;
+	
+	            _store2.default.dispatch({ type: _storeConstants2.default.events.ENTRY_ADDED, data: this.createRandomEntry() });
+	        }
+	    }, {
+	        key: 'createRandomEntry',
+	        value: function createRandomEntry() {
+	            return {
+	                id: randomInt(1000),
+	                likes: randomInt(1000),
+	                postTitle: this.state.username,
+	                username: this.state.postTitle,
+	                views: randomInt(1000),
+	                created: new Date().toString()
+	            };
+	
+	            function randomInt(boundary) {
+	                return Math.floor(Math.random() * boundary);
+	            }
+	        }
+	    }, {
+	        key: 'handleUsernameChange',
+	        value: function handleUsernameChange(event) {
+	            console.log('handle change', event.target);
+	
+	            this.setState({
+	                username: event.target.value
+	            });
+	        }
+	    }, {
+	        key: 'handlePostTitleChange',
+	        value: function handlePostTitleChange(event) {
+	            console.log('handle change', event.target);
+	
+	            this.setState({
+	                postTitle: event.target.value
+	            });
+	        }
+	    }, {
+	        key: 'render',
 	        value: function render() {
 	            return _react2.default.createElement(
-	                "form",
+	                'div',
 	                null,
 	                _react2.default.createElement(
-	                    "label",
+	                    'label',
 	                    null,
-	                    "User name",
-	                    _react2.default.createElement("input", { type: "text" })
+	                    'User name',
+	                    _react2.default.createElement('input', { value: this.state.username, onChange: this.handleUsernameChange, type: 'text' })
 	                ),
 	                _react2.default.createElement(
-	                    "label",
+	                    'label',
 	                    null,
-	                    "Post title",
-	                    _react2.default.createElement("input", { type: "text" })
+	                    'Post title',
+	                    _react2.default.createElement('input', { value: this.state.postTitle, onChange: this.handlePostTitleChange, type: 'text' })
+	                ),
+	                _react2.default.createElement(
+	                    'button',
+	                    { onClick: this.send },
+	                    'Add entry'
 	                )
 	            );
 	        }
@@ -23475,7 +23521,7 @@
 	
 	
 	// module
-	exports.push([module.id, ".root {\n  display: flex;\n  flex-direction: column;\n}\n.root .user-list-table {\n  width: 70%;\n  border-collapse: collapse;\n  vertical-align: middle;\n}\n.root .user-list-table thead td {\n  text-align: center;\n  font-weight: bold;\n}\n.root .user-list-table td {\n  border: 1px solid black;\n}\n", ""]);
+	exports.push([module.id, ".root {\n  display: flex;\n  flex-direction: column;\n}\n.root .user-list-table {\n  margin: 2em;\n  width: 70%;\n  border-collapse: collapse;\n  vertical-align: middle;\n}\n.root .user-list-table thead td {\n  text-align: center;\n  font-weight: bold;\n}\n.root .user-list-table td {\n  border: 1px solid black;\n}\n", ""]);
 	
 	// exports
 

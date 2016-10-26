@@ -4,7 +4,7 @@
     <exclude-output />
     <content url="file://$MODULE_DIR$" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="myapp node_modules" level="project" />
     <orderEntry type="library" name="Node.js v4.2.4 Core Modules" level="application" />
+    <orderEntry type="library" name="redux-user-list node_modules" level="project" />
   </component>
 </module>
