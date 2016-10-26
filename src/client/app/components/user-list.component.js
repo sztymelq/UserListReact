@@ -1,26 +1,15 @@
 import React from 'react';
-
-const headers = ['ID', 'User name', 'Post title', 'Views', 'Likes', 'Created at'].map(function(header) {
-    return <td key={header}>{header}</td>;
-});
+import TableRow from './user-list-table-row.component.js';
+import TableBody from './user-list-table-body.component.js';
 
 class UserList extends React.Component {
-    constructor(props) {
-        super(props);
-    }
-
     render() {
-        return <table>
-                <thead>
-                    <tr>
-                        {headers}
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                    </tr>
-                </tbody>
-            </table>
+        return <table className='user-list-table'>
+                    <thead>
+                        <TableRow tableData={this.props.tableHeaders}></TableRow>
+                    </thead>
+                        <TableBody tableRows={this.props.tableData}></TableBody>
+                </table>
     }
 }
 

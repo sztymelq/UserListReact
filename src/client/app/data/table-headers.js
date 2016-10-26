@@ -1,0 +1,1 @@
+export default ['ID', 'User name', 'Post title', 'Views', 'Likes', 'Created at'];

@@ -61,9 +61,17 @@
 	
 	var _userListComponent2 = _interopRequireDefault(_userListComponent);
 	
-	var _store = __webpack_require__(/*! ./store.js */ 173);
+	var _userListFormComponent = __webpack_require__(/*! ./components/user-list-form.component.js */ 175);
+	
+	var _userListFormComponent2 = _interopRequireDefault(_userListFormComponent);
+	
+	var _store = __webpack_require__(/*! ./store/store.js */ 176);
 	
 	var _store2 = _interopRequireDefault(_store);
+	
+	var _storeConstants = __webpack_require__(/*! ./store/store-constants.js */ 193);
+	
+	var _storeConstants2 = _interopRequireDefault(_storeConstants);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -73,43 +81,65 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var store = (0, _store2.default)();
+	__webpack_require__(/*! ./index.less */ 197);
 	
 	var App = function (_React$Component) {
 	    _inherits(App, _React$Component);
 	
-	    function App(props) {
+	    function App() {
 	        _classCallCheck(this, App);
 	
-	        var _this = _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).call(this, props));
+	        var _this = _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).call(this));
 	
+	        _store2.default.subscribe(_this.onNewData.bind(_this));
+	        _this.state = _store2.default.getState();
 	        _this.send = _this.send.bind(_this);
 	        return _this;
 	    }
 	
 	    _createClass(App, [{
+	        key: 'onNewData',
+	        value: function onNewData() {
+	            var newData = _store2.default.getState();
+	
+	            this.setState({
+	                tableData: newData.tableData
+	            });
+	        }
+	    }, {
 	        key: 'send',
 	        value: function send() {
-	            store.dispatch({ type: 'niceEvent', data: 'data!' });
-	            console.log('event sent!');
+	            _store2.default.dispatch({ type: _storeConstants2.default.events.ENTRY_ADDED, data: {
+	                    id: 555,
+	                    likes: 555,
+	                    postTitle: 'wow',
+	                    username: 'Sztymel',
+	                    views: 10000,
+	                    created: 'Wed Oct 26 2016 08:23:45'
+	                } });
 	        }
 	    }, {
 	        key: 'render',
 	        value: function render() {
 	            return _react2.default.createElement(
 	                'div',
-	                null,
+	                { className: 'root' },
 	                _react2.default.createElement(
-	                    'p',
-	                    null,
-	                    ' Hello React!'
+	                    'h1',
+	                    { className: 'header-root' },
+	                    'User List for Callstack'
 	                ),
-	                _react2.default.createElement(_userListComponent2.default, { data: store.getState() }),
 	                _react2.default.createElement(
-	                    'button',
-	                    { onClick: this.send },
-	                    'Dispatch!'
-	                )
+	                    'div',
+	                    { className: 'toolbar-root' },
+	                    _react2.default.createElement(_userListFormComponent2.default, null),
+	                    _react2.default.createElement(
+	                        'button',
+	                        { onClick: this.send },
+	                        'Add entry'
+	                    )
+	                ),
+	                _react2.default.createElement(_userListComponent2.default, { tableHeaders: this.state.tableHeaders, tableData: this.state.tableData })
 	            );
 	        }
 	    }]);
@@ -22018,6 +22048,14 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
+	var _userListTableRowComponent = __webpack_require__(/*! ./user-list-table-row.component.js */ 173);
+	
+	var _userListTableRowComponent2 = _interopRequireDefault(_userListTableRowComponent);
+	
+	var _userListTableBodyComponent = __webpack_require__(/*! ./user-list-table-body.component.js */ 174);
+	
+	var _userListTableBodyComponent2 = _interopRequireDefault(_userListTableBodyComponent);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -22026,21 +22064,13 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var headers = ['ID', 'User name', 'Post title', 'Views', 'Likes', 'Created at'].map(function (header) {
-	    return _react2.default.createElement(
-	        'td',
-	        { key: header },
-	        header
-	    );
-	});
-	
 	var UserList = function (_React$Component) {
 	    _inherits(UserList, _React$Component);
 	
-	    function UserList(props) {
+	    function UserList() {
 	        _classCallCheck(this, UserList);
 	
-	        return _possibleConstructorReturn(this, (UserList.__proto__ || Object.getPrototypeOf(UserList)).call(this, props));
+	        return _possibleConstructorReturn(this, (UserList.__proto__ || Object.getPrototypeOf(UserList)).apply(this, arguments));
 	    }
 	
 	    _createClass(UserList, [{
@@ -22048,21 +22078,13 @@
 	        value: function render() {
 	            return _react2.default.createElement(
 	                'table',
-	                null,
+	                { className: 'user-list-table' },
 	                _react2.default.createElement(
 	                    'thead',
 	                    null,
-	                    _react2.default.createElement(
-	                        'tr',
-	                        null,
-	                        headers
-	                    )
+	                    _react2.default.createElement(_userListTableRowComponent2.default, { tableData: this.props.tableHeaders })
 	                ),
-	                _react2.default.createElement(
-	                    'tbody',
-	                    null,
-	                    _react2.default.createElement('tr', null)
-	                )
+	                _react2.default.createElement(_userListTableBodyComponent2.default, { tableRows: this.props.tableData })
 	            );
 	        }
 	    }]);
@@ -22074,9 +22096,9 @@
 
 /***/ },
 /* 173 */
-/*!*********************************!*\
-  !*** ./src/client/app/store.js ***!
-  \*********************************/
+/*!********************************************************************!*\
+  !*** ./src/client/app/components/user-list-table-row.component.js ***!
+  \********************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -22085,33 +22107,226 @@
 	    value: true
 	});
 	
-	var _redux = __webpack_require__(/*! redux */ 174);
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 	
-	var _userListReducer = __webpack_require__(/*! ./reducers/user-list.reducer.js */ 189);
+	var _react = __webpack_require__(/*! react */ 1);
 	
-	var _userListReducer2 = _interopRequireDefault(_userListReducer);
-	
-	var _data = __webpack_require__(/*! ./data-provider/data.js */ 190);
-	
-	var _data2 = _interopRequireDefault(_data);
+	var _react2 = _interopRequireDefault(_react);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	function initialize() {
-	    var store = (0, _redux.createStore)(_userListReducer2.default, _data2.default);
-	    store.subscribe(storeHandler);
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
-	    function storeHandler() {
-	        console.log('store.getState()', store.getState());
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var UserListTableRow = function (_React$Component) {
+	    _inherits(UserListTableRow, _React$Component);
+	
+	    function UserListTableRow() {
+	        _classCallCheck(this, UserListTableRow);
+	
+	        return _possibleConstructorReturn(this, (UserListTableRow.__proto__ || Object.getPrototypeOf(UserListTableRow)).apply(this, arguments));
 	    }
 	
-	    return store;
-	}
+	    _createClass(UserListTableRow, [{
+	        key: 'render',
+	        value: function render() {
+	            var data = this.props.tableData;
 	
-	exports.default = initialize;
+	            var tableData = Object.keys(data).map(function (record, index) {
+	                return _react2.default.createElement(
+	                    'td',
+	                    { key: index },
+	                    data[record]
+	                );
+	            });
+	
+	            return _react2.default.createElement(
+	                'tr',
+	                null,
+	                tableData
+	            );
+	        }
+	    }]);
+	
+	    return UserListTableRow;
+	}(_react2.default.Component);
+	
+	exports.default = UserListTableRow;
 
 /***/ },
 /* 174 */
+/*!*********************************************************************!*\
+  !*** ./src/client/app/components/user-list-table-body.component.js ***!
+  \*********************************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(/*! react */ 1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _userListTableRowComponent = __webpack_require__(/*! ./user-list-table-row.component.js */ 173);
+	
+	var _userListTableRowComponent2 = _interopRequireDefault(_userListTableRowComponent);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var UserListTableBody = function (_React$Component) {
+	    _inherits(UserListTableBody, _React$Component);
+	
+	    function UserListTableBody() {
+	        _classCallCheck(this, UserListTableBody);
+	
+	        return _possibleConstructorReturn(this, (UserListTableBody.__proto__ || Object.getPrototypeOf(UserListTableBody)).apply(this, arguments));
+	    }
+	
+	    _createClass(UserListTableBody, [{
+	        key: 'render',
+	        value: function render() {
+	            var tableRows = this.props.tableRows.map(function (record, index) {
+	                return _react2.default.createElement(_userListTableRowComponent2.default, { key: index, tableData: record });
+	            });
+	
+	            return _react2.default.createElement(
+	                'tbody',
+	                { key: 'UserListTableBody' },
+	                tableRows
+	            );
+	        }
+	    }]);
+	
+	    return UserListTableBody;
+	}(_react2.default.Component);
+	
+	exports.default = UserListTableBody;
+
+/***/ },
+/* 175 */
+/*!***************************************************************!*\
+  !*** ./src/client/app/components/user-list-form.component.js ***!
+  \***************************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(/*! react */ 1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var userListForm = function (_React$Component) {
+	    _inherits(userListForm, _React$Component);
+	
+	    function userListForm() {
+	        _classCallCheck(this, userListForm);
+	
+	        return _possibleConstructorReturn(this, (userListForm.__proto__ || Object.getPrototypeOf(userListForm)).apply(this, arguments));
+	    }
+	
+	    _createClass(userListForm, [{
+	        key: "render",
+	        value: function render() {
+	            return _react2.default.createElement(
+	                "form",
+	                null,
+	                _react2.default.createElement(
+	                    "label",
+	                    null,
+	                    "User name",
+	                    _react2.default.createElement("input", { type: "text" })
+	                ),
+	                _react2.default.createElement(
+	                    "label",
+	                    null,
+	                    "Post title",
+	                    _react2.default.createElement("input", { type: "text" })
+	                )
+	            );
+	        }
+	    }]);
+	
+	    return userListForm;
+	}(_react2.default.Component);
+	
+	exports.default = userListForm;
+
+/***/ },
+/* 176 */
+/*!***************************************!*\
+  !*** ./src/client/app/store/store.js ***!
+  \***************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	
+	var _redux = __webpack_require__(/*! redux */ 177);
+	
+	var _userListReducer = __webpack_require__(/*! ./../reducers/user-list.reducer.js */ 192);
+	
+	var _userListReducer2 = _interopRequireDefault(_userListReducer);
+	
+	var _tableHeaders = __webpack_require__(/*! ./../data/table-headers.js */ 194);
+	
+	var _tableHeaders2 = _interopRequireDefault(_tableHeaders);
+	
+	var _dataService = __webpack_require__(/*! ./../data/data.service.js */ 195);
+	
+	var _dataService2 = _interopRequireDefault(_dataService);
+	
+	var _storeConstants = __webpack_require__(/*! ./store-constants.js */ 193);
+	
+	var _storeConstants2 = _interopRequireDefault(_storeConstants);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var data = {
+	    tableHeaders: _tableHeaders2.default,
+	    tableData: []
+	};
+	
+	var store = (0, _redux.createStore)(_userListReducer2.default, data);
+	
+	_dataService2.default.getAll().then(function (data) {
+	    store.dispatch({ type: _storeConstants2.default.events.NEW_ENTRIES, data: data });
+	});
+	
+	exports.default = store;
+
+/***/ },
+/* 177 */
 /*!******************************!*\
   !*** ./~/redux/lib/index.js ***!
   \******************************/
@@ -22122,27 +22337,27 @@
 	exports.__esModule = true;
 	exports.compose = exports.applyMiddleware = exports.bindActionCreators = exports.combineReducers = exports.createStore = undefined;
 	
-	var _createStore = __webpack_require__(/*! ./createStore */ 175);
+	var _createStore = __webpack_require__(/*! ./createStore */ 178);
 	
 	var _createStore2 = _interopRequireDefault(_createStore);
 	
-	var _combineReducers = __webpack_require__(/*! ./combineReducers */ 184);
+	var _combineReducers = __webpack_require__(/*! ./combineReducers */ 187);
 	
 	var _combineReducers2 = _interopRequireDefault(_combineReducers);
 	
-	var _bindActionCreators = __webpack_require__(/*! ./bindActionCreators */ 186);
+	var _bindActionCreators = __webpack_require__(/*! ./bindActionCreators */ 189);
 	
 	var _bindActionCreators2 = _interopRequireDefault(_bindActionCreators);
 	
-	var _applyMiddleware = __webpack_require__(/*! ./applyMiddleware */ 187);
+	var _applyMiddleware = __webpack_require__(/*! ./applyMiddleware */ 190);
 	
 	var _applyMiddleware2 = _interopRequireDefault(_applyMiddleware);
 	
-	var _compose = __webpack_require__(/*! ./compose */ 188);
+	var _compose = __webpack_require__(/*! ./compose */ 191);
 	
 	var _compose2 = _interopRequireDefault(_compose);
 	
-	var _warning = __webpack_require__(/*! ./utils/warning */ 185);
+	var _warning = __webpack_require__(/*! ./utils/warning */ 188);
 	
 	var _warning2 = _interopRequireDefault(_warning);
 	
@@ -22166,7 +22381,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(/*! ./~/process/browser.js */ 3)))
 
 /***/ },
-/* 175 */
+/* 178 */
 /*!************************************!*\
   !*** ./~/redux/lib/createStore.js ***!
   \************************************/
@@ -22178,11 +22393,11 @@
 	exports.ActionTypes = undefined;
 	exports['default'] = createStore;
 	
-	var _isPlainObject = __webpack_require__(/*! lodash/isPlainObject */ 176);
+	var _isPlainObject = __webpack_require__(/*! lodash/isPlainObject */ 179);
 	
 	var _isPlainObject2 = _interopRequireDefault(_isPlainObject);
 	
-	var _symbolObservable = __webpack_require__(/*! symbol-observable */ 180);
+	var _symbolObservable = __webpack_require__(/*! symbol-observable */ 183);
 	
 	var _symbolObservable2 = _interopRequireDefault(_symbolObservable);
 	
@@ -22435,14 +22650,14 @@
 	}
 
 /***/ },
-/* 176 */
+/* 179 */
 /*!***********************************!*\
   !*** ./~/lodash/isPlainObject.js ***!
   \***********************************/
 /***/ function(module, exports, __webpack_require__) {
 
-	var getPrototype = __webpack_require__(/*! ./_getPrototype */ 177),
-	    isObjectLike = __webpack_require__(/*! ./isObjectLike */ 179);
+	var getPrototype = __webpack_require__(/*! ./_getPrototype */ 180),
+	    isObjectLike = __webpack_require__(/*! ./isObjectLike */ 182);
 	
 	/** `Object#toString` result references. */
 	var objectTag = '[object Object]';
@@ -22512,13 +22727,13 @@
 
 
 /***/ },
-/* 177 */
+/* 180 */
 /*!***********************************!*\
   !*** ./~/lodash/_getPrototype.js ***!
   \***********************************/
 /***/ function(module, exports, __webpack_require__) {
 
-	var overArg = __webpack_require__(/*! ./_overArg */ 178);
+	var overArg = __webpack_require__(/*! ./_overArg */ 181);
 	
 	/** Built-in value references. */
 	var getPrototype = overArg(Object.getPrototypeOf, Object);
@@ -22527,7 +22742,7 @@
 
 
 /***/ },
-/* 178 */
+/* 181 */
 /*!******************************!*\
   !*** ./~/lodash/_overArg.js ***!
   \******************************/
@@ -22551,7 +22766,7 @@
 
 
 /***/ },
-/* 179 */
+/* 182 */
 /*!**********************************!*\
   !*** ./~/lodash/isObjectLike.js ***!
   \**********************************/
@@ -22589,17 +22804,17 @@
 
 
 /***/ },
-/* 180 */
+/* 183 */
 /*!**************************************!*\
   !*** ./~/symbol-observable/index.js ***!
   \**************************************/
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(/*! ./lib/index */ 181);
+	module.exports = __webpack_require__(/*! ./lib/index */ 184);
 
 
 /***/ },
-/* 181 */
+/* 184 */
 /*!******************************************!*\
   !*** ./~/symbol-observable/lib/index.js ***!
   \******************************************/
@@ -22611,7 +22826,7 @@
 	  value: true
 	});
 	
-	var _ponyfill = __webpack_require__(/*! ./ponyfill */ 183);
+	var _ponyfill = __webpack_require__(/*! ./ponyfill */ 186);
 	
 	var _ponyfill2 = _interopRequireDefault(_ponyfill);
 	
@@ -22634,10 +22849,10 @@
 	
 	var result = (0, _ponyfill2['default'])(root);
 	exports['default'] = result;
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }()), __webpack_require__(/*! ./../../webpack/buildin/module.js */ 182)(module)))
+	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }()), __webpack_require__(/*! ./../../webpack/buildin/module.js */ 185)(module)))
 
 /***/ },
-/* 182 */
+/* 185 */
 /*!***********************************!*\
   !*** (webpack)/buildin/module.js ***!
   \***********************************/
@@ -22656,7 +22871,7 @@
 
 
 /***/ },
-/* 183 */
+/* 186 */
 /*!*********************************************!*\
   !*** ./~/symbol-observable/lib/ponyfill.js ***!
   \*********************************************/
@@ -22687,7 +22902,7 @@
 	};
 
 /***/ },
-/* 184 */
+/* 187 */
 /*!****************************************!*\
   !*** ./~/redux/lib/combineReducers.js ***!
   \****************************************/
@@ -22698,13 +22913,13 @@
 	exports.__esModule = true;
 	exports['default'] = combineReducers;
 	
-	var _createStore = __webpack_require__(/*! ./createStore */ 175);
+	var _createStore = __webpack_require__(/*! ./createStore */ 178);
 	
-	var _isPlainObject = __webpack_require__(/*! lodash/isPlainObject */ 176);
+	var _isPlainObject = __webpack_require__(/*! lodash/isPlainObject */ 179);
 	
 	var _isPlainObject2 = _interopRequireDefault(_isPlainObject);
 	
-	var _warning = __webpack_require__(/*! ./utils/warning */ 185);
+	var _warning = __webpack_require__(/*! ./utils/warning */ 188);
 	
 	var _warning2 = _interopRequireDefault(_warning);
 	
@@ -22838,7 +23053,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(/*! ./~/process/browser.js */ 3)))
 
 /***/ },
-/* 185 */
+/* 188 */
 /*!**************************************!*\
   !*** ./~/redux/lib/utils/warning.js ***!
   \**************************************/
@@ -22871,7 +23086,7 @@
 	}
 
 /***/ },
-/* 186 */
+/* 189 */
 /*!*******************************************!*\
   !*** ./~/redux/lib/bindActionCreators.js ***!
   \*******************************************/
@@ -22930,7 +23145,7 @@
 	}
 
 /***/ },
-/* 187 */
+/* 190 */
 /*!****************************************!*\
   !*** ./~/redux/lib/applyMiddleware.js ***!
   \****************************************/
@@ -22944,7 +23159,7 @@
 	
 	exports['default'] = applyMiddleware;
 	
-	var _compose = __webpack_require__(/*! ./compose */ 188);
+	var _compose = __webpack_require__(/*! ./compose */ 191);
 	
 	var _compose2 = _interopRequireDefault(_compose);
 	
@@ -22996,7 +23211,7 @@
 	}
 
 /***/ },
-/* 188 */
+/* 191 */
 /*!********************************!*\
   !*** ./~/redux/lib/compose.js ***!
   \********************************/
@@ -23042,10 +23257,57 @@
 	}
 
 /***/ },
-/* 189 */
+/* 192 */
 /*!******************************************************!*\
   !*** ./src/client/app/reducers/user-list.reducer.js ***!
   \******************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	
+	var _storeConstants = __webpack_require__(/*! ../store/store-constants.js */ 193);
+	
+	var _storeConstants2 = _interopRequireDefault(_storeConstants);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function userListBodyReducer(state, action) {
+	    console.log('Reducer: state', state);
+	    console.log('Reducer: action', action);
+	
+	    var merged = [state];
+	
+	    switch (action.type) {
+	        case _storeConstants2.default.events.NEW_ENTRIES:
+	            add({ tableData: action.data });
+	            break;
+	        case _storeConstants2.default.events.ENTRY_ADDED:
+	            var newTableData = state.tableData.slice();
+	            newTableData.push(action.data);
+	            add({ tableData: newTableData });
+	            break;
+	        default:
+	            break;
+	    }
+	
+	    return Object.assign.apply(Object, [{}].concat(merged));
+	
+	    function add(newState) {
+	        merged.push(newState);
+	    }
+	}
+	
+	exports.default = userListBodyReducer;
+
+/***/ },
+/* 193 */
+/*!*************************************************!*\
+  !*** ./src/client/app/store/store-constants.js ***!
+  \*************************************************/
 /***/ function(module, exports) {
 
 	'use strict';
@@ -23053,20 +23315,67 @@
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
-	function userListReducer(state, action) {
-	    console.log('state', state);
-	    console.log('action', action);
+	var constants = Object.freeze({
+	    events: {
+	        ENTRY_ADDED: 'USER_LIST_ENTRY_ADDED',
+	        NEW_ENTRIES: 'USER_LIST_NEW_ENTRIES'
+	    }
+	});
 	
-	    return 'wow!';
-	}
-	
-	exports.default = userListReducer;
+	exports.default = constants;
 
 /***/ },
-/* 190 */
+/* 194 */
 /*!**********************************************!*\
-  !*** ./src/client/app/data-provider/data.js ***!
+  !*** ./src/client/app/data/table-headers.js ***!
   \**********************************************/
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.default = ['ID', 'User name', 'Post title', 'Views', 'Likes', 'Created at'];
+
+/***/ },
+/* 195 */
+/*!*********************************************!*\
+  !*** ./src/client/app/data/data.service.js ***!
+  \*********************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	
+	var _tableData = __webpack_require__(/*! ./table-data.js */ 196);
+	
+	var _tableData2 = _interopRequireDefault(_tableData);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var dataService = {
+	    getAll: getAll
+	};
+	
+	function getAll() {
+	    return new Promise(function (resolve) {
+	        setTimeout(function () {
+	            return resolve(_tableData2.default);
+	        }, 2000);
+	    });
+	}
+	
+	exports.default = dataService;
+
+/***/ },
+/* 196 */
+/*!*******************************************!*\
+  !*** ./src/client/app/data/table-data.js ***!
+  \*******************************************/
 /***/ function(module, exports) {
 
 	"use strict";
@@ -23075,55 +23384,415 @@
 	    value: true
 	});
 	exports.default = [{
-	    "id": "580e6b860b84af6011ba7e03",
+	    "id": "1",
 	    "postTitle": "Gorganic",
 	    "username": "Augusta Figueroa",
 	    "views": 901,
 	    "likes": 705,
-	    "created": "2014-12-03T08:57:39 -01:00"
+	    "created": "2014-12-03T08:57:39"
 	}, {
-	    "id": "580e6b868da035d03368322e",
+	    "id": "2",
 	    "postTitle": "Omatom",
 	    "username": "Liliana Orr",
 	    "views": 485,
 	    "likes": 435,
-	    "created": "2015-11-10T11:45:33 -01:00"
+	    "created": "2015-11-10T11:45:33"
 	}, {
-	    "id": "580e6b86a4509927d2afb3ad",
+	    "id": "3",
 	    "postTitle": "Gazak",
 	    "username": "Page Clemons",
 	    "views": 825,
 	    "likes": 648,
-	    "created": "2016-06-11T07:48:02 -02:00"
+	    "created": "2016-06-11T07:48:02"
 	}, {
-	    "id": "580e6b86bd31415768ddc7bd",
+	    "id": "4",
 	    "postTitle": "Zinca",
 	    "username": "Daniels Martin",
 	    "views": 433,
 	    "likes": 969,
-	    "created": "2014-04-07T05:38:06 -02:00"
+	    "created": "2014-04-07T05:38:06"
 	}, {
-	    "id": "580e6b86efc9940c396e6e19",
+	    "id": "5",
 	    "postTitle": "Bunga",
 	    "username": "Brandie Gibbs",
 	    "views": 229,
 	    "likes": 763,
-	    "created": "2016-02-09T01:29:50 -01:00"
+	    "created": "2016-02-09T01:29:50"
 	}, {
-	    "id": "580e6b86ebb7dfd28944b12e",
+	    "id": "6",
 	    "postTitle": "Zanymax",
 	    "username": "Schneider Haney",
 	    "views": 134,
 	    "likes": 221,
-	    "created": "2014-06-30T03:37:26 -02:00"
+	    "created": "2014-06-30T03:37:26"
 	}, {
-	    "id": "580e6b8623565d70414af44c",
+	    "id": "7",
 	    "postTitle": "Magnemo",
 	    "username": "Kelley Bauer",
 	    "views": 500,
 	    "likes": 846,
-	    "created": "2014-02-26T12:25:14 -01:00"
+	    "created": "2014-02-26T12:25:14"
 	}];
+
+/***/ },
+/* 197 */
+/*!***********************************!*\
+  !*** ./src/client/app/index.less ***!
+  \***********************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	// style-loader: Adds some css to the DOM by adding a <style> tag
+	
+	// load the styles
+	var content = __webpack_require__(/*! !./../../../~/css-loader!./../../../~/less-loader!./index.less */ 198);
+	if(typeof content === 'string') content = [[module.id, content, '']];
+	// add the styles to the DOM
+	var update = __webpack_require__(/*! ./../../../~/style-loader/addStyles.js */ 200)(content, {});
+	if(content.locals) module.exports = content.locals;
+	// Hot Module Replacement
+	if(false) {
+		// When the styles change, update the <style> tags
+		if(!content.locals) {
+			module.hot.accept("!!./../../../node_modules/css-loader/index.js!./../../../node_modules/less-loader/index.js!./index.less", function() {
+				var newContent = require("!!./../../../node_modules/css-loader/index.js!./../../../node_modules/less-loader/index.js!./index.less");
+				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+				update(newContent);
+			});
+		}
+		// When the module is disposed, remove the <style> tags
+		module.hot.dispose(function() { update(); });
+	}
+
+/***/ },
+/* 198 */
+/*!******************************************************************!*\
+  !*** ./~/css-loader!./~/less-loader!./src/client/app/index.less ***!
+  \******************************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	exports = module.exports = __webpack_require__(/*! ./../../../~/css-loader/lib/css-base.js */ 199)();
+	// imports
+	
+	
+	// module
+	exports.push([module.id, ".root {\n  display: flex;\n  flex-direction: column;\n}\n.root .user-list-table {\n  width: 70%;\n  border-collapse: collapse;\n  vertical-align: middle;\n}\n.root .user-list-table thead td {\n  text-align: center;\n  font-weight: bold;\n}\n.root .user-list-table td {\n  border: 1px solid black;\n}\n", ""]);
+	
+	// exports
+
+
+/***/ },
+/* 199 */
+/*!**************************************!*\
+  !*** ./~/css-loader/lib/css-base.js ***!
+  \**************************************/
+/***/ function(module, exports) {
+
+	/*
+		MIT License http://www.opensource.org/licenses/mit-license.php
+		Author Tobias Koppers @sokra
+	*/
+	// css base code, injected by the css-loader
+	module.exports = function() {
+		var list = [];
+	
+		// return the list of modules as css string
+		list.toString = function toString() {
+			var result = [];
+			for(var i = 0; i < this.length; i++) {
+				var item = this[i];
+				if(item[2]) {
+					result.push("@media " + item[2] + "{" + item[1] + "}");
+				} else {
+					result.push(item[1]);
+				}
+			}
+			return result.join("");
+		};
+	
+		// import a list of modules into the list
+		list.i = function(modules, mediaQuery) {
+			if(typeof modules === "string")
+				modules = [[null, modules, ""]];
+			var alreadyImportedModules = {};
+			for(var i = 0; i < this.length; i++) {
+				var id = this[i][0];
+				if(typeof id === "number")
+					alreadyImportedModules[id] = true;
+			}
+			for(i = 0; i < modules.length; i++) {
+				var item = modules[i];
+				// skip already imported module
+				// this implementation is not 100% perfect for weird media query combinations
+				//  when a module is imported multiple times with different media queries.
+				//  I hope this will never occur (Hey this way we have smaller bundles)
+				if(typeof item[0] !== "number" || !alreadyImportedModules[item[0]]) {
+					if(mediaQuery && !item[2]) {
+						item[2] = mediaQuery;
+					} else if(mediaQuery) {
+						item[2] = "(" + item[2] + ") and (" + mediaQuery + ")";
+					}
+					list.push(item);
+				}
+			}
+		};
+		return list;
+	};
+
+
+/***/ },
+/* 200 */
+/*!*************************************!*\
+  !*** ./~/style-loader/addStyles.js ***!
+  \*************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	/*
+		MIT License http://www.opensource.org/licenses/mit-license.php
+		Author Tobias Koppers @sokra
+	*/
+	var stylesInDom = {},
+		memoize = function(fn) {
+			var memo;
+			return function () {
+				if (typeof memo === "undefined") memo = fn.apply(this, arguments);
+				return memo;
+			};
+		},
+		isOldIE = memoize(function() {
+			return /msie [6-9]\b/.test(window.navigator.userAgent.toLowerCase());
+		}),
+		getHeadElement = memoize(function () {
+			return document.head || document.getElementsByTagName("head")[0];
+		}),
+		singletonElement = null,
+		singletonCounter = 0,
+		styleElementsInsertedAtTop = [];
+	
+	module.exports = function(list, options) {
+		if(true) {
+			if(typeof document !== "object") throw new Error("The style-loader cannot be used in a non-browser environment");
+		}
+	
+		options = options || {};
+		// Force single-tag solution on IE6-9, which has a hard limit on the # of <style>
+		// tags it will allow on a page
+		if (typeof options.singleton === "undefined") options.singleton = isOldIE();
+	
+		// By default, add <style> tags to the bottom of <head>.
+		if (typeof options.insertAt === "undefined") options.insertAt = "bottom";
+	
+		var styles = listToStyles(list);
+		addStylesToDom(styles, options);
+	
+		return function update(newList) {
+			var mayRemove = [];
+			for(var i = 0; i < styles.length; i++) {
+				var item = styles[i];
+				var domStyle = stylesInDom[item.id];
+				domStyle.refs--;
+				mayRemove.push(domStyle);
+			}
+			if(newList) {
+				var newStyles = listToStyles(newList);
+				addStylesToDom(newStyles, options);
+			}
+			for(var i = 0; i < mayRemove.length; i++) {
+				var domStyle = mayRemove[i];
+				if(domStyle.refs === 0) {
+					for(var j = 0; j < domStyle.parts.length; j++)
+						domStyle.parts[j]();
+					delete stylesInDom[domStyle.id];
+				}
+			}
+		};
+	}
+	
+	function addStylesToDom(styles, options) {
+		for(var i = 0; i < styles.length; i++) {
+			var item = styles[i];
+			var domStyle = stylesInDom[item.id];
+			if(domStyle) {
+				domStyle.refs++;
+				for(var j = 0; j < domStyle.parts.length; j++) {
+					domStyle.parts[j](item.parts[j]);
+				}
+				for(; j < item.parts.length; j++) {
+					domStyle.parts.push(addStyle(item.parts[j], options));
+				}
+			} else {
+				var parts = [];
+				for(var j = 0; j < item.parts.length; j++) {
+					parts.push(addStyle(item.parts[j], options));
+				}
+				stylesInDom[item.id] = {id: item.id, refs: 1, parts: parts};
+			}
+		}
+	}
+	
+	function listToStyles(list) {
+		var styles = [];
+		var newStyles = {};
+		for(var i = 0; i < list.length; i++) {
+			var item = list[i];
+			var id = item[0];
+			var css = item[1];
+			var media = item[2];
+			var sourceMap = item[3];
+			var part = {css: css, media: media, sourceMap: sourceMap};
+			if(!newStyles[id])
+				styles.push(newStyles[id] = {id: id, parts: [part]});
+			else
+				newStyles[id].parts.push(part);
+		}
+		return styles;
+	}
+	
+	function insertStyleElement(options, styleElement) {
+		var head = getHeadElement();
+		var lastStyleElementInsertedAtTop = styleElementsInsertedAtTop[styleElementsInsertedAtTop.length - 1];
+		if (options.insertAt === "top") {
+			if(!lastStyleElementInsertedAtTop) {
+				head.insertBefore(styleElement, head.firstChild);
+			} else if(lastStyleElementInsertedAtTop.nextSibling) {
+				head.insertBefore(styleElement, lastStyleElementInsertedAtTop.nextSibling);
+			} else {
+				head.appendChild(styleElement);
+			}
+			styleElementsInsertedAtTop.push(styleElement);
+		} else if (options.insertAt === "bottom") {
+			head.appendChild(styleElement);
+		} else {
+			throw new Error("Invalid value for parameter 'insertAt'. Must be 'top' or 'bottom'.");
+		}
+	}
+	
+	function removeStyleElement(styleElement) {
+		styleElement.parentNode.removeChild(styleElement);
+		var idx = styleElementsInsertedAtTop.indexOf(styleElement);
+		if(idx >= 0) {
+			styleElementsInsertedAtTop.splice(idx, 1);
+		}
+	}
+	
+	function createStyleElement(options) {
+		var styleElement = document.createElement("style");
+		styleElement.type = "text/css";
+		insertStyleElement(options, styleElement);
+		return styleElement;
+	}
+	
+	function createLinkElement(options) {
+		var linkElement = document.createElement("link");
+		linkElement.rel = "stylesheet";
+		insertStyleElement(options, linkElement);
+		return linkElement;
+	}
+	
+	function addStyle(obj, options) {
+		var styleElement, update, remove;
+	
+		if (options.singleton) {
+			var styleIndex = singletonCounter++;
+			styleElement = singletonElement || (singletonElement = createStyleElement(options));
+			update = applyToSingletonTag.bind(null, styleElement, styleIndex, false);
+			remove = applyToSingletonTag.bind(null, styleElement, styleIndex, true);
+		} else if(obj.sourceMap &&
+			typeof URL === "function" &&
+			typeof URL.createObjectURL === "function" &&
+			typeof URL.revokeObjectURL === "function" &&
+			typeof Blob === "function" &&
+			typeof btoa === "function") {
+			styleElement = createLinkElement(options);
+			update = updateLink.bind(null, styleElement);
+			remove = function() {
+				removeStyleElement(styleElement);
+				if(styleElement.href)
+					URL.revokeObjectURL(styleElement.href);
+			};
+		} else {
+			styleElement = createStyleElement(options);
+			update = applyToTag.bind(null, styleElement);
+			remove = function() {
+				removeStyleElement(styleElement);
+			};
+		}
+	
+		update(obj);
+	
+		return function updateStyle(newObj) {
+			if(newObj) {
+				if(newObj.css === obj.css && newObj.media === obj.media && newObj.sourceMap === obj.sourceMap)
+					return;
+				update(obj = newObj);
+			} else {
+				remove();
+			}
+		};
+	}
+	
+	var replaceText = (function () {
+		var textStore = [];
+	
+		return function (index, replacement) {
+			textStore[index] = replacement;
+			return textStore.filter(Boolean).join('\n');
+		};
+	})();
+	
+	function applyToSingletonTag(styleElement, index, remove, obj) {
+		var css = remove ? "" : obj.css;
+	
+		if (styleElement.styleSheet) {
+			styleElement.styleSheet.cssText = replaceText(index, css);
+		} else {
+			var cssNode = document.createTextNode(css);
+			var childNodes = styleElement.childNodes;
+			if (childNodes[index]) styleElement.removeChild(childNodes[index]);
+			if (childNodes.length) {
+				styleElement.insertBefore(cssNode, childNodes[index]);
+			} else {
+				styleElement.appendChild(cssNode);
+			}
+		}
+	}
+	
+	function applyToTag(styleElement, obj) {
+		var css = obj.css;
+		var media = obj.media;
+	
+		if(media) {
+			styleElement.setAttribute("media", media)
+		}
+	
+		if(styleElement.styleSheet) {
+			styleElement.styleSheet.cssText = css;
+		} else {
+			while(styleElement.firstChild) {
+				styleElement.removeChild(styleElement.firstChild);
+			}
+			styleElement.appendChild(document.createTextNode(css));
+		}
+	}
+	
+	function updateLink(linkElement, obj) {
+		var css = obj.css;
+		var sourceMap = obj.sourceMap;
+	
+		if(sourceMap) {
+			// http://stackoverflow.com/a/26603875
+			css += "\n/*# sourceMappingURL=data:application/json;base64," + btoa(unescape(encodeURIComponent(JSON.stringify(sourceMap)))) + " */";
+		}
+	
+		var blob = new Blob([css], { type: "text/css" });
+	
+		var oldSrc = linkElement.href;
+	
+		linkElement.href = URL.createObjectURL(blob);
+	
+		if(oldSrc)
+			URL.revokeObjectURL(oldSrc);
+	}
+
 
 /***/ }
 /******/ ]);

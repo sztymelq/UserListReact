@@ -13,9 +13,13 @@ var config = {
   module : {
     loaders : [
       {
-        test : /\.jsx?/,
+        test : /\.js?/,
         include : APP_DIR,
         loader : 'babel'
+      },
+      {
+        test: /\.less$/,
+        loader: "style!css!less"
       }
     ]
   }
