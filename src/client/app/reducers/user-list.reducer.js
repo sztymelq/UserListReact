@@ -1,4 +1,5 @@
 import actions from '../actions/actions.js'
+import moment from 'moment';
 
 export default function (state = [], action = {}) {
     console.log('Reducer: state', state);
@@ -6,18 +7,18 @@ export default function (state = [], action = {}) {
 
     switch (action.type) {
         case actions.constants.NEW_ENTRIES:
-            state = [].concat(decorateDates(action.data));
+            state = [].concat(formatDates(action.data));
             break;
         case actions.constants.ENTRY_ADDED:
-            state = [].concat(action.data).concat(state);
+            state = [].concat(formatDates([action.data])).concat(state);
             break;
         default:
             break;
     }
 
-    function decorateDates(data) {
+    function formatDates(data) {
         return data.map((entry) => {
-            entry.created = new Date(entry.created).toString();
+            entry.created = moment(entry.created).format('l');
             return entry;
         })
     }

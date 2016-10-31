@@ -25,7 +25,7 @@ class userListForm extends React.Component {
             postTitle: this.state.postTitle,
             views: randomInt(1000),
             likes: randomInt(1000),
-            created: new Date().toString()
+            created: new Date()
         };
 
         function randomInt(boundary) {
@@ -46,8 +46,6 @@ class userListForm extends React.Component {
     }
 
     render() {
-        console.log('this.props', this.props);
-
         return <div>
                     <label>User name
                         <input value={this.state.username} onChange={this.onUsernameChange} type="text"></input>
