@@ -1,29 +1,26 @@
-import constants from '../store/store-constants.js';
+import actions from '../actions/actions.js'
 
-function userListBodyReducer(state, action) {
+export default function (state = [], action = {}) {
     console.log('Reducer: state', state);
     console.log('Reducer: action', action);
 
-    const merged = [state];
-
     switch (action.type) {
-        case constants.events.NEW_ENTRIES:
-            add({tableData: action.data});
+        case actions.constants.NEW_ENTRIES:
+            state = [].concat(decorateDates(action.data));
             break;
-        case constants.events.ENTRY_ADDED:
-            const newTableData = state.tableData.slice();
-            newTableData.push(action.data);
-            add({tableData: newTableData});
+        case actions.constants.ENTRY_ADDED:
+            state = [].concat(action.data).concat(state);
             break;
         default:
             break;
     }
 
-    return Object.assign({}, ...merged);
-
-    function add(newState) {
-        merged.push(newState);
+    function decorateDates(data) {
+        return data.map((entry) => {
+            entry.created = new Date(entry.created).toString();
+            return entry;
+        })
     }
-}
 
-export default userListBodyReducer;
+    return state;
+}

@@ -1,12 +1,11 @@
 import tableData from './table-data.js';
 
 const dataService = {
-    getAll
+    fetch
 };
 
-
-function getAll() {
-    return new Promise(function (resolve) {
+function fetch() {
+    return new Promise((resolve) => {
         setTimeout(() => resolve(tableData), 2000);
     });
 }

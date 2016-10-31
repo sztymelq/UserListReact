@@ -34,7 +34,7 @@
 /******/ 	__webpack_require__.c = installedModules;
 /******/
 /******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "";
+/******/ 	__webpack_require__.p = "/public/";
 /******/
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(0);
@@ -57,21 +57,27 @@
 	
 	var _reactDom = __webpack_require__(/*! react-dom */ 34);
 	
-	var _userListComponent = __webpack_require__(/*! ./components/user-list.component.js */ 172);
+	var _redux = __webpack_require__(/*! redux */ 172);
+	
+	var _userListComponent = __webpack_require__(/*! ./components/user-list.component.js */ 187);
 	
 	var _userListComponent2 = _interopRequireDefault(_userListComponent);
 	
-	var _userListFormComponent = __webpack_require__(/*! ./components/user-list-form.component.js */ 175);
+	var _userListFormComponent = __webpack_require__(/*! ./components/user-list-form.component.js */ 190);
 	
 	var _userListFormComponent2 = _interopRequireDefault(_userListFormComponent);
 	
-	var _store = __webpack_require__(/*! ./store/store.js */ 176);
+	var _actions = __webpack_require__(/*! ./actions/actions.js */ 191);
 	
-	var _store2 = _interopRequireDefault(_store);
+	var _actions2 = _interopRequireDefault(_actions);
 	
-	var _storeConstants = __webpack_require__(/*! ./store/store-constants.js */ 193);
+	var _userListReducer = __webpack_require__(/*! ./reducers/user-list.reducer.js */ 192);
 	
-	var _storeConstants2 = _interopRequireDefault(_storeConstants);
+	var _userListReducer2 = _interopRequireDefault(_userListReducer);
+	
+	var _dataService = __webpack_require__(/*! ./data/data.service.js */ 193);
+	
+	var _dataService2 = _interopRequireDefault(_dataService);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -81,7 +87,17 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	__webpack_require__(/*! ./index.less */ 197);
+	__webpack_require__(/*! ./index.less */ 195);
+	
+	var initialData = {
+	    tableData: []
+	};
+	
+	var store = (0, _redux.createStore)(_userListReducer2.default, initialData);
+	
+	_dataService2.default.fetch().then(function (data) {
+	    store.dispatch(_actions2.default.addNewEntries(data));
+	});
 	
 	var App = function (_React$Component) {
 	    _inherits(App, _React$Component);
@@ -91,15 +107,16 @@
 	
 	        var _this = _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).call(this));
 	
-	        _store2.default.subscribe(_this.onNewData.bind(_this));
-	        _this.state = _store2.default.getState();
+	        store.subscribe(_this.onNewData.bind(_this));
+	        console.log('initialData', initialData);
+	        _this.state = initialData;
 	        return _this;
 	    }
 	
 	    _createClass(App, [{
 	        key: 'onNewData',
 	        value: function onNewData() {
-	            var newData = _store2.default.getState();
+	            var newData = store.getState();
 	
 	            this.setState({
 	                tableData: newData.tableData
@@ -110,7 +127,7 @@
 	        value: function render() {
 	            return _react2.default.createElement(
 	                'div',
-	                { className: 'root' },
+	                { className: 'app-root' },
 	                _react2.default.createElement(
 	                    'h1',
 	                    { className: 'header-root' },
@@ -119,9 +136,9 @@
 	                _react2.default.createElement(
 	                    'div',
 	                    { className: 'toolbar-root' },
-	                    _react2.default.createElement(_userListFormComponent2.default, null)
+	                    _react2.default.createElement(_userListFormComponent2.default, { addEntry: bindAction(_actions2.default.addEntry) })
 	                ),
-	                _react2.default.createElement(_userListComponent2.default, { tableHeaders: this.state.tableHeaders, tableData: this.state.tableData })
+	                _react2.default.createElement(_userListComponent2.default, { tableData: this.state.tableData })
 	            );
 	        }
 	    }]);
@@ -130,6 +147,12 @@
 	}(_react2.default.Component);
 	
 	(0, _reactDom.render)(_react2.default.createElement(App, null), document.getElementById('app'));
+	
+	function bindAction(action) {
+	    return function () {
+	        store.dispatch(action);
+	    };
+	}
 
 /***/ },
 /* 1 */
@@ -22013,366 +22036,6 @@
 
 /***/ },
 /* 172 */
-/*!**********************************************************!*\
-  !*** ./src/client/app/components/user-list.component.js ***!
-  \**********************************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-	
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-	
-	var _react = __webpack_require__(/*! react */ 1);
-	
-	var _react2 = _interopRequireDefault(_react);
-	
-	var _userListTableRowComponent = __webpack_require__(/*! ./user-list-table-row.component.js */ 173);
-	
-	var _userListTableRowComponent2 = _interopRequireDefault(_userListTableRowComponent);
-	
-	var _userListTableBodyComponent = __webpack_require__(/*! ./user-list-table-body.component.js */ 174);
-	
-	var _userListTableBodyComponent2 = _interopRequireDefault(_userListTableBodyComponent);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-	
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-	
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-	
-	var UserList = function (_React$Component) {
-	    _inherits(UserList, _React$Component);
-	
-	    function UserList() {
-	        _classCallCheck(this, UserList);
-	
-	        return _possibleConstructorReturn(this, (UserList.__proto__ || Object.getPrototypeOf(UserList)).apply(this, arguments));
-	    }
-	
-	    _createClass(UserList, [{
-	        key: 'render',
-	        value: function render() {
-	            return _react2.default.createElement(
-	                'table',
-	                { className: 'user-list-table' },
-	                _react2.default.createElement(
-	                    'thead',
-	                    null,
-	                    _react2.default.createElement(_userListTableRowComponent2.default, { tableData: this.props.tableHeaders })
-	                ),
-	                _react2.default.createElement(_userListTableBodyComponent2.default, { tableRows: this.props.tableData })
-	            );
-	        }
-	    }]);
-	
-	    return UserList;
-	}(_react2.default.Component);
-	
-	exports.default = UserList;
-
-/***/ },
-/* 173 */
-/*!********************************************************************!*\
-  !*** ./src/client/app/components/user-list-table-row.component.js ***!
-  \********************************************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-	
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-	
-	var _react = __webpack_require__(/*! react */ 1);
-	
-	var _react2 = _interopRequireDefault(_react);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-	
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-	
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-	
-	var UserListTableRow = function (_React$Component) {
-	    _inherits(UserListTableRow, _React$Component);
-	
-	    function UserListTableRow() {
-	        _classCallCheck(this, UserListTableRow);
-	
-	        return _possibleConstructorReturn(this, (UserListTableRow.__proto__ || Object.getPrototypeOf(UserListTableRow)).apply(this, arguments));
-	    }
-	
-	    _createClass(UserListTableRow, [{
-	        key: 'render',
-	        value: function render() {
-	            var data = this.props.tableData;
-	
-	            var tableData = Object.keys(data).map(function (record, index) {
-	                return _react2.default.createElement(
-	                    'td',
-	                    { key: index },
-	                    data[record]
-	                );
-	            });
-	
-	            return _react2.default.createElement(
-	                'tr',
-	                null,
-	                tableData
-	            );
-	        }
-	    }]);
-	
-	    return UserListTableRow;
-	}(_react2.default.Component);
-	
-	exports.default = UserListTableRow;
-
-/***/ },
-/* 174 */
-/*!*********************************************************************!*\
-  !*** ./src/client/app/components/user-list-table-body.component.js ***!
-  \*********************************************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-	
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-	
-	var _react = __webpack_require__(/*! react */ 1);
-	
-	var _react2 = _interopRequireDefault(_react);
-	
-	var _userListTableRowComponent = __webpack_require__(/*! ./user-list-table-row.component.js */ 173);
-	
-	var _userListTableRowComponent2 = _interopRequireDefault(_userListTableRowComponent);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-	
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-	
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-	
-	var UserListTableBody = function (_React$Component) {
-	    _inherits(UserListTableBody, _React$Component);
-	
-	    function UserListTableBody() {
-	        _classCallCheck(this, UserListTableBody);
-	
-	        return _possibleConstructorReturn(this, (UserListTableBody.__proto__ || Object.getPrototypeOf(UserListTableBody)).apply(this, arguments));
-	    }
-	
-	    _createClass(UserListTableBody, [{
-	        key: 'render',
-	        value: function render() {
-	            var tableRows = this.props.tableRows.map(function (record, index) {
-	                return _react2.default.createElement(_userListTableRowComponent2.default, { key: index, tableData: record });
-	            });
-	
-	            return _react2.default.createElement(
-	                'tbody',
-	                { key: 'UserListTableBody' },
-	                tableRows
-	            );
-	        }
-	    }]);
-	
-	    return UserListTableBody;
-	}(_react2.default.Component);
-	
-	exports.default = UserListTableBody;
-
-/***/ },
-/* 175 */
-/*!***************************************************************!*\
-  !*** ./src/client/app/components/user-list-form.component.js ***!
-  \***************************************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-	
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-	
-	var _react = __webpack_require__(/*! react */ 1);
-	
-	var _react2 = _interopRequireDefault(_react);
-	
-	var _store = __webpack_require__(/*! ../store/store.js */ 176);
-	
-	var _store2 = _interopRequireDefault(_store);
-	
-	var _storeConstants = __webpack_require__(/*! ../store/store-constants.js */ 193);
-	
-	var _storeConstants2 = _interopRequireDefault(_storeConstants);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-	
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-	
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-	
-	var userListForm = function (_React$Component) {
-	    _inherits(userListForm, _React$Component);
-	
-	    function userListForm() {
-	        _classCallCheck(this, userListForm);
-	
-	        var _this = _possibleConstructorReturn(this, (userListForm.__proto__ || Object.getPrototypeOf(userListForm)).call(this));
-	
-	        _this.send = _this.send.bind(_this);
-	        _this.handleUsernameChange = _this.handleUsernameChange.bind(_this);
-	        _this.handlePostTitleChange = _this.handlePostTitleChange.bind(_this);
-	        _this.state = {
-	            username: '',
-	            postTitle: ''
-	        };
-	        return _this;
-	    }
-	
-	    _createClass(userListForm, [{
-	        key: 'send',
-	        value: function send() {
-	            console.log('this.state.postTitle', this.state.postTitle);
-	            if (!this.state.username || !this.state.postTitle) return;
-	
-	            _store2.default.dispatch({ type: _storeConstants2.default.events.ENTRY_ADDED, data: this.createRandomEntry() });
-	        }
-	    }, {
-	        key: 'createRandomEntry',
-	        value: function createRandomEntry() {
-	            return {
-	                id: randomInt(1000),
-	                likes: randomInt(1000),
-	                postTitle: this.state.username,
-	                username: this.state.postTitle,
-	                views: randomInt(1000),
-	                created: new Date().toString()
-	            };
-	
-	            function randomInt(boundary) {
-	                return Math.floor(Math.random() * boundary);
-	            }
-	        }
-	    }, {
-	        key: 'handleUsernameChange',
-	        value: function handleUsernameChange(event) {
-	            console.log('handle change', event.target);
-	
-	            this.setState({
-	                username: event.target.value
-	            });
-	        }
-	    }, {
-	        key: 'handlePostTitleChange',
-	        value: function handlePostTitleChange(event) {
-	            console.log('handle change', event.target);
-	
-	            this.setState({
-	                postTitle: event.target.value
-	            });
-	        }
-	    }, {
-	        key: 'render',
-	        value: function render() {
-	            return _react2.default.createElement(
-	                'div',
-	                null,
-	                _react2.default.createElement(
-	                    'label',
-	                    null,
-	                    'User name',
-	                    _react2.default.createElement('input', { value: this.state.username, onChange: this.handleUsernameChange, type: 'text' })
-	                ),
-	                _react2.default.createElement(
-	                    'label',
-	                    null,
-	                    'Post title',
-	                    _react2.default.createElement('input', { value: this.state.postTitle, onChange: this.handlePostTitleChange, type: 'text' })
-	                ),
-	                _react2.default.createElement(
-	                    'button',
-	                    { onClick: this.send },
-	                    'Add entry'
-	                )
-	            );
-	        }
-	    }]);
-	
-	    return userListForm;
-	}(_react2.default.Component);
-	
-	exports.default = userListForm;
-
-/***/ },
-/* 176 */
-/*!***************************************!*\
-  !*** ./src/client/app/store/store.js ***!
-  \***************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-	
-	var _redux = __webpack_require__(/*! redux */ 177);
-	
-	var _userListReducer = __webpack_require__(/*! ./../reducers/user-list.reducer.js */ 192);
-	
-	var _userListReducer2 = _interopRequireDefault(_userListReducer);
-	
-	var _tableHeaders = __webpack_require__(/*! ./../data/table-headers.js */ 194);
-	
-	var _tableHeaders2 = _interopRequireDefault(_tableHeaders);
-	
-	var _dataService = __webpack_require__(/*! ./../data/data.service.js */ 195);
-	
-	var _dataService2 = _interopRequireDefault(_dataService);
-	
-	var _storeConstants = __webpack_require__(/*! ./store-constants.js */ 193);
-	
-	var _storeConstants2 = _interopRequireDefault(_storeConstants);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	var data = {
-	    tableHeaders: _tableHeaders2.default,
-	    tableData: []
-	};
-	
-	var store = (0, _redux.createStore)(_userListReducer2.default, data);
-	
-	_dataService2.default.getAll().then(function (data) {
-	    store.dispatch({ type: _storeConstants2.default.events.NEW_ENTRIES, data: data });
-	});
-	
-	exports.default = store;
-
-/***/ },
-/* 177 */
 /*!******************************!*\
   !*** ./~/redux/lib/index.js ***!
   \******************************/
@@ -22383,27 +22046,27 @@
 	exports.__esModule = true;
 	exports.compose = exports.applyMiddleware = exports.bindActionCreators = exports.combineReducers = exports.createStore = undefined;
 	
-	var _createStore = __webpack_require__(/*! ./createStore */ 178);
+	var _createStore = __webpack_require__(/*! ./createStore */ 173);
 	
 	var _createStore2 = _interopRequireDefault(_createStore);
 	
-	var _combineReducers = __webpack_require__(/*! ./combineReducers */ 187);
+	var _combineReducers = __webpack_require__(/*! ./combineReducers */ 182);
 	
 	var _combineReducers2 = _interopRequireDefault(_combineReducers);
 	
-	var _bindActionCreators = __webpack_require__(/*! ./bindActionCreators */ 189);
+	var _bindActionCreators = __webpack_require__(/*! ./bindActionCreators */ 184);
 	
 	var _bindActionCreators2 = _interopRequireDefault(_bindActionCreators);
 	
-	var _applyMiddleware = __webpack_require__(/*! ./applyMiddleware */ 190);
+	var _applyMiddleware = __webpack_require__(/*! ./applyMiddleware */ 185);
 	
 	var _applyMiddleware2 = _interopRequireDefault(_applyMiddleware);
 	
-	var _compose = __webpack_require__(/*! ./compose */ 191);
+	var _compose = __webpack_require__(/*! ./compose */ 186);
 	
 	var _compose2 = _interopRequireDefault(_compose);
 	
-	var _warning = __webpack_require__(/*! ./utils/warning */ 188);
+	var _warning = __webpack_require__(/*! ./utils/warning */ 183);
 	
 	var _warning2 = _interopRequireDefault(_warning);
 	
@@ -22427,7 +22090,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(/*! ./~/process/browser.js */ 3)))
 
 /***/ },
-/* 178 */
+/* 173 */
 /*!************************************!*\
   !*** ./~/redux/lib/createStore.js ***!
   \************************************/
@@ -22439,11 +22102,11 @@
 	exports.ActionTypes = undefined;
 	exports['default'] = createStore;
 	
-	var _isPlainObject = __webpack_require__(/*! lodash/isPlainObject */ 179);
+	var _isPlainObject = __webpack_require__(/*! lodash/isPlainObject */ 174);
 	
 	var _isPlainObject2 = _interopRequireDefault(_isPlainObject);
 	
-	var _symbolObservable = __webpack_require__(/*! symbol-observable */ 183);
+	var _symbolObservable = __webpack_require__(/*! symbol-observable */ 178);
 	
 	var _symbolObservable2 = _interopRequireDefault(_symbolObservable);
 	
@@ -22696,14 +22359,14 @@
 	}
 
 /***/ },
-/* 179 */
+/* 174 */
 /*!***********************************!*\
   !*** ./~/lodash/isPlainObject.js ***!
   \***********************************/
 /***/ function(module, exports, __webpack_require__) {
 
-	var getPrototype = __webpack_require__(/*! ./_getPrototype */ 180),
-	    isObjectLike = __webpack_require__(/*! ./isObjectLike */ 182);
+	var getPrototype = __webpack_require__(/*! ./_getPrototype */ 175),
+	    isObjectLike = __webpack_require__(/*! ./isObjectLike */ 177);
 	
 	/** `Object#toString` result references. */
 	var objectTag = '[object Object]';
@@ -22773,13 +22436,13 @@
 
 
 /***/ },
-/* 180 */
+/* 175 */
 /*!***********************************!*\
   !*** ./~/lodash/_getPrototype.js ***!
   \***********************************/
 /***/ function(module, exports, __webpack_require__) {
 
-	var overArg = __webpack_require__(/*! ./_overArg */ 181);
+	var overArg = __webpack_require__(/*! ./_overArg */ 176);
 	
 	/** Built-in value references. */
 	var getPrototype = overArg(Object.getPrototypeOf, Object);
@@ -22788,7 +22451,7 @@
 
 
 /***/ },
-/* 181 */
+/* 176 */
 /*!******************************!*\
   !*** ./~/lodash/_overArg.js ***!
   \******************************/
@@ -22812,7 +22475,7 @@
 
 
 /***/ },
-/* 182 */
+/* 177 */
 /*!**********************************!*\
   !*** ./~/lodash/isObjectLike.js ***!
   \**********************************/
@@ -22850,17 +22513,17 @@
 
 
 /***/ },
-/* 183 */
+/* 178 */
 /*!**************************************!*\
   !*** ./~/symbol-observable/index.js ***!
   \**************************************/
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(/*! ./lib/index */ 184);
+	module.exports = __webpack_require__(/*! ./lib/index */ 179);
 
 
 /***/ },
-/* 184 */
+/* 179 */
 /*!******************************************!*\
   !*** ./~/symbol-observable/lib/index.js ***!
   \******************************************/
@@ -22872,7 +22535,7 @@
 	  value: true
 	});
 	
-	var _ponyfill = __webpack_require__(/*! ./ponyfill */ 186);
+	var _ponyfill = __webpack_require__(/*! ./ponyfill */ 181);
 	
 	var _ponyfill2 = _interopRequireDefault(_ponyfill);
 	
@@ -22895,10 +22558,10 @@
 	
 	var result = (0, _ponyfill2['default'])(root);
 	exports['default'] = result;
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }()), __webpack_require__(/*! ./../../webpack/buildin/module.js */ 185)(module)))
+	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }()), __webpack_require__(/*! ./../../webpack/buildin/module.js */ 180)(module)))
 
 /***/ },
-/* 185 */
+/* 180 */
 /*!***********************************!*\
   !*** (webpack)/buildin/module.js ***!
   \***********************************/
@@ -22917,7 +22580,7 @@
 
 
 /***/ },
-/* 186 */
+/* 181 */
 /*!*********************************************!*\
   !*** ./~/symbol-observable/lib/ponyfill.js ***!
   \*********************************************/
@@ -22948,7 +22611,7 @@
 	};
 
 /***/ },
-/* 187 */
+/* 182 */
 /*!****************************************!*\
   !*** ./~/redux/lib/combineReducers.js ***!
   \****************************************/
@@ -22959,13 +22622,13 @@
 	exports.__esModule = true;
 	exports['default'] = combineReducers;
 	
-	var _createStore = __webpack_require__(/*! ./createStore */ 178);
+	var _createStore = __webpack_require__(/*! ./createStore */ 173);
 	
-	var _isPlainObject = __webpack_require__(/*! lodash/isPlainObject */ 179);
+	var _isPlainObject = __webpack_require__(/*! lodash/isPlainObject */ 174);
 	
 	var _isPlainObject2 = _interopRequireDefault(_isPlainObject);
 	
-	var _warning = __webpack_require__(/*! ./utils/warning */ 188);
+	var _warning = __webpack_require__(/*! ./utils/warning */ 183);
 	
 	var _warning2 = _interopRequireDefault(_warning);
 	
@@ -23099,7 +22762,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(/*! ./~/process/browser.js */ 3)))
 
 /***/ },
-/* 188 */
+/* 183 */
 /*!**************************************!*\
   !*** ./~/redux/lib/utils/warning.js ***!
   \**************************************/
@@ -23132,7 +22795,7 @@
 	}
 
 /***/ },
-/* 189 */
+/* 184 */
 /*!*******************************************!*\
   !*** ./~/redux/lib/bindActionCreators.js ***!
   \*******************************************/
@@ -23191,7 +22854,7 @@
 	}
 
 /***/ },
-/* 190 */
+/* 185 */
 /*!****************************************!*\
   !*** ./~/redux/lib/applyMiddleware.js ***!
   \****************************************/
@@ -23205,7 +22868,7 @@
 	
 	exports['default'] = applyMiddleware;
 	
-	var _compose = __webpack_require__(/*! ./compose */ 191);
+	var _compose = __webpack_require__(/*! ./compose */ 186);
 	
 	var _compose2 = _interopRequireDefault(_compose);
 	
@@ -23257,7 +22920,7 @@
 	}
 
 /***/ },
-/* 191 */
+/* 186 */
 /*!********************************!*\
   !*** ./~/redux/lib/compose.js ***!
   \********************************/
@@ -23303,6 +22966,365 @@
 	}
 
 /***/ },
+/* 187 */
+/*!**********************************************************!*\
+  !*** ./src/client/app/components/user-list.component.js ***!
+  \**********************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(/*! react */ 1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _userListTableRowComponent = __webpack_require__(/*! ./user-list-table-row.component.js */ 188);
+	
+	var _userListTableRowComponent2 = _interopRequireDefault(_userListTableRowComponent);
+	
+	var _userListTableBodyComponent = __webpack_require__(/*! ./user-list-table-body.component.js */ 189);
+	
+	var _userListTableBodyComponent2 = _interopRequireDefault(_userListTableBodyComponent);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var tableHeaders = ['ID', 'User name', 'Post title', 'Views', 'Likes', 'Created at'];
+	
+	var UserList = function (_React$Component) {
+	    _inherits(UserList, _React$Component);
+	
+	    function UserList() {
+	        _classCallCheck(this, UserList);
+	
+	        var _this = _possibleConstructorReturn(this, (UserList.__proto__ || Object.getPrototypeOf(UserList)).call(this));
+	
+	        _this.filterByName = _this.filterByName.bind(_this);
+	        _this.state = {
+	            tableData: _this.props.tableData,
+	            filterQuery: ''
+	        };
+	        return _this;
+	    }
+	
+	    _createClass(UserList, [{
+	        key: 'filterByName',
+	        value: function filterByName(event) {
+	            this.setState({
+	                filterQuery: event.target.value
+	            });
+	        }
+	    }, {
+	        key: 'render',
+	        value: function render() {
+	            return _react2.default.createElement(
+	                'div',
+	                null,
+	                _react2.default.createElement(
+	                    'table',
+	                    { className: 'user-list-table' },
+	                    _react2.default.createElement(
+	                        'thead',
+	                        null,
+	                        _react2.default.createElement(_userListTableRowComponent2.default, { tableData: tableHeaders })
+	                    ),
+	                    _react2.default.createElement(_userListTableBodyComponent2.default, { tableRows: this.state.tableData })
+	                ),
+	                _react2.default.createElement(
+	                    'label',
+	                    null,
+	                    'Filter by name',
+	                    _react2.default.createElement('input', { value: this.state.filterQuery, onChange: this.filterByName, type: 'text' })
+	                )
+	            );
+	        }
+	    }]);
+	
+	    return UserList;
+	}(_react2.default.Component);
+	
+	exports.default = UserList;
+
+/***/ },
+/* 188 */
+/*!********************************************************************!*\
+  !*** ./src/client/app/components/user-list-table-row.component.js ***!
+  \********************************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(/*! react */ 1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var UserListTableRow = function (_React$Component) {
+	    _inherits(UserListTableRow, _React$Component);
+	
+	    function UserListTableRow() {
+	        _classCallCheck(this, UserListTableRow);
+	
+	        return _possibleConstructorReturn(this, (UserListTableRow.__proto__ || Object.getPrototypeOf(UserListTableRow)).apply(this, arguments));
+	    }
+	
+	    _createClass(UserListTableRow, [{
+	        key: 'render',
+	        value: function render() {
+	            var data = this.props.tableData;
+	
+	            var tableData = Object.keys(data).map(function (record, index) {
+	                return _react2.default.createElement(
+	                    'td',
+	                    { key: index },
+	                    data[record]
+	                );
+	            });
+	
+	            return _react2.default.createElement(
+	                'tr',
+	                null,
+	                tableData
+	            );
+	        }
+	    }]);
+	
+	    return UserListTableRow;
+	}(_react2.default.Component);
+	
+	exports.default = UserListTableRow;
+
+/***/ },
+/* 189 */
+/*!*********************************************************************!*\
+  !*** ./src/client/app/components/user-list-table-body.component.js ***!
+  \*********************************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(/*! react */ 1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _userListTableRowComponent = __webpack_require__(/*! ./user-list-table-row.component.js */ 188);
+	
+	var _userListTableRowComponent2 = _interopRequireDefault(_userListTableRowComponent);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var UserListTableBody = function (_React$Component) {
+	    _inherits(UserListTableBody, _React$Component);
+	
+	    function UserListTableBody() {
+	        _classCallCheck(this, UserListTableBody);
+	
+	        return _possibleConstructorReturn(this, (UserListTableBody.__proto__ || Object.getPrototypeOf(UserListTableBody)).apply(this, arguments));
+	    }
+	
+	    _createClass(UserListTableBody, [{
+	        key: 'render',
+	        value: function render() {
+	            var tableRows = this.props.tableRows.map(function (record, index) {
+	                return _react2.default.createElement(_userListTableRowComponent2.default, { key: index, tableData: record });
+	            });
+	
+	            return _react2.default.createElement(
+	                'tbody',
+	                { key: 'UserListTableBody' },
+	                tableRows
+	            );
+	        }
+	    }]);
+	
+	    return UserListTableBody;
+	}(_react2.default.Component);
+	
+	exports.default = UserListTableBody;
+
+/***/ },
+/* 190 */
+/*!***************************************************************!*\
+  !*** ./src/client/app/components/user-list-form.component.js ***!
+  \***************************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(/*! react */ 1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var userListForm = function (_React$Component) {
+	    _inherits(userListForm, _React$Component);
+	
+	    function userListForm() {
+	        _classCallCheck(this, userListForm);
+	
+	        var _this = _possibleConstructorReturn(this, (userListForm.__proto__ || Object.getPrototypeOf(userListForm)).call(this));
+	
+	        _this.send = _this.send.bind(_this);
+	        _this.onUsernameChange = _this.onUsernameChange.bind(_this);
+	        _this.onTitleChange = _this.onTitleChange.bind(_this);
+	        _this.state = {
+	            username: '',
+	            postTitle: ''
+	        };
+	
+	        console.log('this.props', _this.props);
+	        return _this;
+	    }
+	
+	    _createClass(userListForm, [{
+	        key: 'send',
+	        value: function send() {
+	            if (!this.state.username || !this.state.postTitle) return;
+	
+	            this.props.addEntry(this.createRandomEntry());
+	        }
+	    }, {
+	        key: 'createRandomEntry',
+	        value: function createRandomEntry() {
+	            return {
+	                id: randomInt(1000),
+	                likes: randomInt(1000),
+	                postTitle: this.state.username,
+	                username: this.state.postTitle,
+	                views: randomInt(1000),
+	                created: new Date().toString()
+	            };
+	
+	            function randomInt(boundary) {
+	                return Math.floor(Math.random() * boundary);
+	            }
+	        }
+	    }, {
+	        key: 'onUsernameChange',
+	        value: function onUsernameChange(event) {
+	            this.setState({
+	                username: event.target.value
+	            });
+	        }
+	    }, {
+	        key: 'onTitleChange',
+	        value: function onTitleChange(event) {
+	            this.setState({
+	                postTitle: event.target.value
+	            });
+	        }
+	    }, {
+	        key: 'render',
+	        value: function render() {
+	            return _react2.default.createElement(
+	                'div',
+	                null,
+	                _react2.default.createElement(
+	                    'label',
+	                    null,
+	                    'User name',
+	                    _react2.default.createElement('input', { value: this.state.username, onChange: this.onUsernameChange, type: 'text' })
+	                ),
+	                _react2.default.createElement(
+	                    'label',
+	                    null,
+	                    'Post title',
+	                    _react2.default.createElement('input', { value: this.state.postTitle, onChange: this.onTitleChange, type: 'text' })
+	                ),
+	                _react2.default.createElement(
+	                    'button',
+	                    { onClick: this.send },
+	                    'Add entry'
+	                )
+	            );
+	        }
+	    }]);
+	
+	    return userListForm;
+	}(_react2.default.Component);
+	
+	exports.default = userListForm;
+
+/***/ },
+/* 191 */
+/*!*******************************************!*\
+  !*** ./src/client/app/actions/actions.js ***!
+  \*******************************************/
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	var constants = Object.freeze({
+	    ENTRY_ADDED: 'USER_LIST_ENTRY_ADDED',
+	    NEW_ENTRIES: 'USER_LIST_NEW_ENTRIES'
+	});
+	
+	var actions = {
+	    addNewEntries: function addNewEntries(data) {
+	        return { type: constants.NEW_ENTRIES, data: data };
+	    },
+	    addEntry: function addEntry(data) {
+	        return { type: constants.ENTRY_ADDED, data: data };
+	    },
+	    constants: constants
+	
+	};
+	
+	exports.default = actions;
+
+/***/ },
 /* 192 */
 /*!******************************************************!*\
   !*** ./src/client/app/reducers/user-list.reducer.js ***!
@@ -23315,26 +23337,19 @@
 	    value: true
 	});
 	
-	var _storeConstants = __webpack_require__(/*! ../store/store-constants.js */ 193);
-	
-	var _storeConstants2 = _interopRequireDefault(_storeConstants);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	function userListBodyReducer(state, action) {
+	exports.default = function (state, action) {
 	    console.log('Reducer: state', state);
 	    console.log('Reducer: action', action);
 	
 	    var merged = [state];
 	
 	    switch (action.type) {
-	        case _storeConstants2.default.events.NEW_ENTRIES:
-	            add({ tableData: action.data });
+	        case _actions2.default.constants.NEW_ENTRIES:
+	            addToMerged({ tableData: action.data });
 	            break;
-	        case _storeConstants2.default.events.ENTRY_ADDED:
-	            var newTableData = state.tableData.slice();
-	            newTableData.push(action.data);
-	            add({ tableData: newTableData });
+	        case _actions2.default.constants.ENTRY_ADDED:
+	            var tableData = [].concat(action.data).concat(state.tableData);
+	            addToMerged({ tableData: tableData });
 	            break;
 	        default:
 	            break;
@@ -23342,50 +23357,19 @@
 	
 	    return Object.assign.apply(Object, [{}].concat(merged));
 	
-	    function add(newState) {
+	    function addToMerged(newState) {
 	        merged.push(newState);
 	    }
-	}
+	};
 	
-	exports.default = userListBodyReducer;
+	var _actions = __webpack_require__(/*! ../actions/actions.js */ 191);
+	
+	var _actions2 = _interopRequireDefault(_actions);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ },
 /* 193 */
-/*!*************************************************!*\
-  !*** ./src/client/app/store/store-constants.js ***!
-  \*************************************************/
-/***/ function(module, exports) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-	var constants = Object.freeze({
-	    events: {
-	        ENTRY_ADDED: 'USER_LIST_ENTRY_ADDED',
-	        NEW_ENTRIES: 'USER_LIST_NEW_ENTRIES'
-	    }
-	});
-	
-	exports.default = constants;
-
-/***/ },
-/* 194 */
-/*!**********************************************!*\
-  !*** ./src/client/app/data/table-headers.js ***!
-  \**********************************************/
-/***/ function(module, exports) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	exports.default = ['ID', 'User name', 'Post title', 'Views', 'Likes', 'Created at'];
-
-/***/ },
-/* 195 */
 /*!*********************************************!*\
   !*** ./src/client/app/data/data.service.js ***!
   \*********************************************/
@@ -23397,17 +23381,17 @@
 	    value: true
 	});
 	
-	var _tableData = __webpack_require__(/*! ./table-data.js */ 196);
+	var _tableData = __webpack_require__(/*! ./table-data.js */ 194);
 	
 	var _tableData2 = _interopRequireDefault(_tableData);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	var dataService = {
-	    getAll: getAll
+	    fetch: fetch
 	};
 	
-	function getAll() {
+	function fetch() {
 	    return new Promise(function (resolve) {
 	        setTimeout(function () {
 	            return resolve(_tableData2.default);
@@ -23418,7 +23402,7 @@
 	exports.default = dataService;
 
 /***/ },
-/* 196 */
+/* 194 */
 /*!*******************************************!*\
   !*** ./src/client/app/data/table-data.js ***!
   \*******************************************/
@@ -23481,7 +23465,7 @@
 	}];
 
 /***/ },
-/* 197 */
+/* 195 */
 /*!***********************************!*\
   !*** ./src/client/app/index.less ***!
   \***********************************/
@@ -23490,10 +23474,10 @@
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 	
 	// load the styles
-	var content = __webpack_require__(/*! !./../../../~/css-loader!./../../../~/less-loader!./index.less */ 198);
+	var content = __webpack_require__(/*! !./../../../~/css-loader!./../../../~/less-loader!./index.less */ 196);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(/*! ./../../../~/style-loader/addStyles.js */ 200)(content, {});
+	var update = __webpack_require__(/*! ./../../../~/style-loader/addStyles.js */ 198)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(false) {
@@ -23510,24 +23494,24 @@
 	}
 
 /***/ },
-/* 198 */
+/* 196 */
 /*!******************************************************************!*\
   !*** ./~/css-loader!./~/less-loader!./src/client/app/index.less ***!
   \******************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(/*! ./../../../~/css-loader/lib/css-base.js */ 199)();
+	exports = module.exports = __webpack_require__(/*! ./../../../~/css-loader/lib/css-base.js */ 197)();
 	// imports
 	
 	
 	// module
-	exports.push([module.id, ".root {\n  display: flex;\n  flex-direction: column;\n}\n.root .user-list-table {\n  margin: 2em;\n  width: 70%;\n  border-collapse: collapse;\n  vertical-align: middle;\n}\n.root .user-list-table thead td {\n  text-align: center;\n  font-weight: bold;\n}\n.root .user-list-table td {\n  border: 1px solid black;\n}\n", ""]);
+	exports.push([module.id, ".app-root {\n  display: flex;\n  flex-direction: column;\n}\n.app-root .user-list-table {\n  margin: 2em;\n  width: 70%;\n  border-collapse: collapse;\n  vertical-align: middle;\n}\n.app-root .user-list-table thead td {\n  text-align: center;\n  font-weight: bold;\n}\n.app-root .user-list-table td {\n  border: 1px solid black;\n}\n", ""]);
 	
 	// exports
 
 
 /***/ },
-/* 199 */
+/* 197 */
 /*!**************************************!*\
   !*** ./~/css-loader/lib/css-base.js ***!
   \**************************************/
@@ -23586,7 +23570,7 @@
 
 
 /***/ },
-/* 200 */
+/* 198 */
 /*!*************************************!*\
   !*** ./~/style-loader/addStyles.js ***!
   \*************************************/

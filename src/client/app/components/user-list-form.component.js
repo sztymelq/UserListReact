@@ -1,33 +1,30 @@
 import React from 'react';
-import store from '../store/store.js';
-import constants from '../store/store-constants.js';
 
 class userListForm extends React.Component {
     constructor() {
         super();
-        this.send = this.send.bind(this);
-        this.handleUsernameChange = this.handleUsernameChange.bind(this);
-        this.handlePostTitleChange = this.handlePostTitleChange.bind(this);
+        this.addNewEntry = this.addNewEntry.bind(this);
+        this.onUsernameChange = this.onUsernameChange.bind(this);
+        this.onTitleChange = this.onTitleChange.bind(this);
         this.state = {
             username: '',
             postTitle: ''
-        }
+        };
     }
 
-    send() {
-        console.log('this.state.postTitle', this.state.postTitle);
+    addNewEntry() {
         if (!this.state.username || !this.state.postTitle) return;
 
-        store.dispatch({type: constants.events.ENTRY_ADDED, data: this.createRandomEntry()});
+        this.props.addEntry(this.createRandomEntry());
     }
 
     createRandomEntry() {
         return {
             id: randomInt(1000),
-            likes: randomInt(1000),
-            postTitle: this.state.username,
-            username: this.state.postTitle,
+            username: this.state.username,
+            postTitle: this.state.postTitle,
             views: randomInt(1000),
+            likes: randomInt(1000),
             created: new Date().toString()
         };
 
@@ -36,26 +33,29 @@ class userListForm extends React.Component {
         }
     }
 
-    handleUsernameChange(event) {
-        console.log('handle change', event.target);
-
+    onUsernameChange(event) {
         this.setState({
             username: event.target.value
         });
     }
-    handlePostTitleChange(event) {
-        console.log('handle change', event.target);
 
+    onTitleChange(event) {
         this.setState({
             postTitle: event.target.value
         });
     }
 
     render() {
+        console.log('this.props', this.props);
+
         return <div>
-                    <label>User name<input value={this.state.username} onChange={this.handleUsernameChange} type="text"></input></label>
-                    <label>Post title<input value={this.state.postTitle} onChange={this.handlePostTitleChange} type="text"></input></label>
-                    <button onClick={this.send}>Add entry</button>
+                    <label>User name
+                        <input value={this.state.username} onChange={this.onUsernameChange} type="text"></input>
+                    </label>
+                    <label>Post title
+                        <input value={this.state.postTitle} onChange={this.onTitleChange} type="text"></input>
+                    </label>
+                    <button onClick={this.addNewEntry}>Add entry</button>
                 </div>
     }
 }
