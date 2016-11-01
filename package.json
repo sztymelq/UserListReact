@@ -2,7 +2,7 @@
   "name": "redux-user-list",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "entry.js",
   "scripts": {
     "dev": "webpack -d --watch",
     "build": "webpack -p",

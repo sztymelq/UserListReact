@@ -1,9 +1,8 @@
 import actions from '../actions/actions.js'
 import moment from 'moment';
 
-export default function (state = [], action = {}) {
-    console.log('Reducer: state', state);
-    console.log('Reducer: action', action);
+export default function (state, action) {
+    if (typeof state === 'undefined') return [];
 
     switch (action.type) {
         case actions.constants.NEW_ENTRIES:

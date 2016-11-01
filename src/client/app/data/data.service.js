@@ -1,4 +1,4 @@
-import tableData from './table-data.js';
+import tableData from './users-data.js';
 
 const dataService = {
     fetch
