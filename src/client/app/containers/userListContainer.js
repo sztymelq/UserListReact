@@ -25,6 +25,12 @@ const mapDispatchToProps = (dispatch) => {
         },
         filterTable: (query) => {
             dispatch(actions.filterEntries(query))
+        },
+        sortTable: (by, desc) => {
+            dispatch(actions.sortTable({
+                by: by,
+                desc: desc
+            }))
         }
     }
 };

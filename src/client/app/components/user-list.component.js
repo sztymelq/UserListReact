@@ -3,15 +3,32 @@ import TableRow from './user-list-table-row.component.js';
 import TableBody from './user-list-table-body.component.js';
 import UserListForm from './user-list-form.component.js';
 
-const tableHeaders = ['ID', 'User name', 'Post title', 'Views', 'Likes', 'Created at'];
+const tableHeaders = {
+    'ID': 'id',
+    'User name': 'username',
+    'Post title': 'postTitle',
+    'Views': 'views',
+    'Likes': 'likes',
+    'Created at': 'created'
+};
 
 class UserList extends React.Component {
     constructor() {
         super();
         this.filterByName = this.filterByName.bind(this);
+        this.tableHeaderClicked = this.tableHeaderClicked.bind(this);
         this.state = {
-            filterQuery: ''
+            filterQuery: '',
+            desc: false
         };
+    }
+
+    tableHeaderClicked(event) {
+        this.setState({
+            desc: !this.state.desc
+        });
+
+        this.props.sortTable(tableHeaders[event.target.textContent], this.state.desc);
     }
 
     filterByName(event) {
@@ -26,13 +43,15 @@ class UserList extends React.Component {
         return <div>
             <UserListForm addEntry={this.props.addEntry}></UserListForm>
             <table className='user-list-table'>
-                <thead>
-                <TableRow tableData={tableHeaders}></TableRow>
+                <thead onClick={this.tableHeaderClicked}>
+                <TableRow tableData={Object.keys(tableHeaders)}
+                          onClick={this.tableHeaderClicked}></TableRow>
                 </thead>
                 <TableBody tableRows={this.props.usersData}></TableBody>
             </table>
             <label>Filter by name
-                <input value={this.state.filterQuery} onChange={this.filterByName} type="text"></input>
+                <input value={this.state.filterQuery}
+                       onChange={this.filterByName} type="text"></input>
             </label>
         </div>
     }
