@@ -29,7 +29,7 @@ const stateProps = (state) => {
 
     return {
         usersData: reduceDataToPage(filteredData, state.pagination.limitTo, state.pagination.pageNo),
-        pagination: computePaginationConfig(state.usersData, state.pagination),
+        pagination: computePaginationConfig(filteredData, state.pagination),
         activeUser: state.activeUser
     }
 };

@@ -20,6 +20,11 @@ export default function (state, action) {
                 limitTo: action.data
             };
             break;
+        case actions.constants.FILTER_ENTRIES:
+            paginationConfig = {
+                pageNo: 0
+            };
+            break;
         default:
             return state;
             break;
