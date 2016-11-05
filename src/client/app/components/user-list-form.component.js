@@ -46,14 +46,14 @@ class userListForm extends React.Component {
     }
 
     render() {
-        return <div>
-                    <label>User name
-                        <input value={this.state.username} onChange={this.onUsernameChange} type="text"></input>
+        return <div className='user-list-form-root'>
+                    <label className='label'>User name
+                        <input value={this.state.username} onChange={this.onUsernameChange} className='input' type="text"></input>
                     </label>
-                    <label>Post title
-                        <input value={this.state.postTitle} onChange={this.onTitleChange} type="text"></input>
+                    <label className='label'>Post title
+                        <input value={this.state.postTitle} onChange={this.onTitleChange} className='input' type="text"></input>
                     </label>
-                    <button onClick={this.addNewEntry}>Add entry</button>
+                    <button onClick={this.addNewEntry} className='button'>Add entry</button>
                 </div>
     }
 }

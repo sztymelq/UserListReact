@@ -42,7 +42,7 @@ class UserList extends React.Component {
     render() {
         return <div>
             <UserListForm addEntry={this.props.addEntry}></UserListForm>
-            <table className='user-list-table'>
+            <table className='table user-list-table'>
                 <thead onClick={this.tableHeaderClicked}>
                 <TableRow tableData={Object.keys(tableHeaders)}
                           onClick={this.tableHeaderClicked}></TableRow>
@@ -51,7 +51,8 @@ class UserList extends React.Component {
             </table>
             <label>Filter by name
                 <input value={this.state.filterQuery}
-                       onChange={this.filterByName} type="text"></input>
+                       onChange={this.filterByName}
+                       className='input' type="text"></input>
             </label>
         </div>
     }
