@@ -17,7 +17,8 @@ export default function (state, action) {
             break;
         case actions.constants.TABLE_LIMIT_CHANGED:
             paginationConfig = {
-                limitTo: action.data
+                limitTo: action.data,
+                pageNo: 0
             };
             break;
         case actions.constants.FILTER_ENTRIES:
