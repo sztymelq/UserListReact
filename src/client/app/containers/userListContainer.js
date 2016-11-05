@@ -20,7 +20,7 @@ function reduceDataToPage(data, limitTo, pageNo) {
 function computePaginationConfig(tableData, pagination) {
     return {
         activePage: pagination.pageNo + 1,
-        pagesQuantity: Math.ceil(tableData.length / pagination.limitTo) + 1
+        pagesQuantity: Math.ceil(tableData.length / pagination.limitTo)
     }
 }
 
