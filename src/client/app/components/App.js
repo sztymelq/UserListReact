@@ -3,7 +3,7 @@ import UserList from '../containers/userListContainer.js';
 
 export default () => (
     <div className='app-root'>
-        <h1 className='app-header'>User List</h1>
+        <h1 className='app-header'>Users List</h1>
         <UserList></UserList>
     </div>
 );

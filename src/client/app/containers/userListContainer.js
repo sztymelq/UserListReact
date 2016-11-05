@@ -12,13 +12,28 @@ function filterTableData(userData, filterQuery) {
     });
 }
 
-const mapStateToProps = (state) => {
+function reduceDataToPage(data, limitTo, pageNo) {
+    const start = pageNo * limitTo;
+    return data.slice(start, start + limitTo);
+}
+
+function computePaginationConfig(tableData, pagination) {
     return {
-        usersData: filterTableData(state.usersData, state.filter)
+        activePage: pagination.pageNo + 1,
+        pagesQuantity: Math.ceil(tableData.length / pagination.limitTo) + 1
+    }
+}
+
+const stateProps = (state) => {
+    const filteredData = filterTableData(state.usersData, state.filter);
+
+    return {
+        usersData: reduceDataToPage(filteredData, state.pagination.limitTo, state.pagination.pageNo),
+        pagination: computePaginationConfig(state.usersData, state.pagination)
     }
 };
 
-const mapDispatchToProps = (dispatch) => {
+const methodsProps = (dispatch) => {
     return {
         addEntry: (entry) => {
             dispatch(actions.addEntry(entry));
@@ -31,13 +46,16 @@ const mapDispatchToProps = (dispatch) => {
                 by: by,
                 desc: desc
             }))
+        },
+        selectPage: (number) => {
+            dispatch(actions.selectPage(number))
         }
     }
 };
 
 const userListContainer = connect(
-    mapStateToProps,
-    mapDispatchToProps
+    stateProps,
+    methodsProps
 )(UserListComponent);
 
 export default userListContainer;

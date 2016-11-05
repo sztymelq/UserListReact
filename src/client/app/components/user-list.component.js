@@ -2,6 +2,7 @@ import React from 'react';
 import TableRow from './user-list-table-row.component.js';
 import TableBody from './user-list-table-body.component.js';
 import UserListForm from './user-list-form.component.js';
+import Pagination from './user-list-pagination.component.js';
 
 const tableHeaders = {
     'ID': 'id',
@@ -42,14 +43,19 @@ class UserList extends React.Component {
     render() {
         return <div>
             <UserListForm addEntry={this.props.addEntry}></UserListForm>
-            <table className='table user-list-table'>
-                <thead onClick={this.tableHeaderClicked}>
-                <TableRow tableData={Object.keys(tableHeaders)}
-                          onClick={this.tableHeaderClicked}></TableRow>
-                </thead>
-                <TableBody tableRows={this.props.usersData}></TableBody>
-            </table>
-            <label>Filter by name
+
+            <div className='user-list-table-container'>
+                <table className='table'>
+                    <thead onClick={this.tableHeaderClicked}>
+                    <TableRow tableData={Object.keys(tableHeaders)}
+                              onClick={this.tableHeaderClicked}></TableRow>
+                    </thead>
+                    <TableBody tableRows={this.props.usersData}></TableBody>
+                </table>
+                <Pagination onPageSelected={this.props.selectPage} config={this.props.pagination}></Pagination>
+            </div>
+
+            <label className='label'>Filter by name
                 <input value={this.state.filterQuery}
                        onChange={this.filterByName}
                        className='input' type="text"></input>

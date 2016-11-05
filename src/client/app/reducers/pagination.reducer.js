@@ -1,7 +1,15 @@
 import actions from '../actions/actions.js';
 
 export default function (state, action) {
-    if (typeof state === 'undefined') return {};
+    if (typeof state === 'undefined') return {
+        limitTo: 10,
+        pageNo: 0
+    };
 
-    return state;
+    if (action.type !== actions.constants.PAGE_SELECTED) return state;
+
+    const pageNoSelected = action.data - 1;
+    return Object.assign({}, state, {
+        pageNo: pageNoSelected
+    });
 }

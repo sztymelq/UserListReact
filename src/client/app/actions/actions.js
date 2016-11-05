@@ -2,7 +2,8 @@ const constants = Object.freeze({
     ENTRY_ADDED: 'USER_LIST_ENTRY_ADDED',
     NEW_ENTRIES: 'USER_LIST_NEW_ENTRIES',
     FILTER_ENTRIES: 'FILTER_ENTRIES',
-    SORT_TABLE: 'SORT_TABLE'
+    SORT_TABLE: 'SORT_TABLE',
+    PAGE_SELECTED: 'PAGE_SELECTED'
 });
 
 const actions = {
@@ -10,8 +11,8 @@ const actions = {
     addEntry: (data) => ({type: constants.ENTRY_ADDED, data}),
     filterEntries: (data) => ({type: constants.FILTER_ENTRIES, data}),
     sortTable: (data) => ({type: constants.SORT_TABLE, data}),
+    selectPage: (data) => ({type: constants.PAGE_SELECTED, data}),
     constants
-
 };
 
 export default actions;
