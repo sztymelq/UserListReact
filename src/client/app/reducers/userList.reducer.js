@@ -1,18 +1,19 @@
 import actions from '../actions/actions.js'
-import moment from 'moment';
+
 
 export default function (state, action) {
+    console.log(action, state);
+
     if (typeof state === 'undefined') return [];
 
     switch (action.type) {
         case actions.constants.NEW_ENTRIES:
-            state = [].concat(formatDates(action.data));
+            state = [].concat(convertDates(action.data));
             break;
         case actions.constants.ENTRY_ADDED:
-            state = [].concat(formatDates([action.data])).concat(state);
+            state = [].concat(action.data).concat(state);
             break;
         case actions.constants.SORT_TABLE:
-            console.log('action.data', action.data);
             state = sortTable([].concat(state), action.data.by, action.data.desc);
             break;
         default:
@@ -20,17 +21,19 @@ export default function (state, action) {
     }
 
     function sortTable(target, sortedProperty, desc) {
-        return target.sort(compareFn);
+        return target.sort(compare);
 
-        function compareFn(a, b) {
-            if (desc) return a[sortedProperty] > b[sortedProperty];
-            return a[sortedProperty] < b[sortedProperty];
+        function compare(a, b) {
+            const result = a[sortedProperty] < b[sortedProperty] ? 1 : -1;
+
+            if (desc) return result;
+            else return -result;
         }
     }
 
-    function formatDates(data) {
+    function convertDates(data) {
         return data.map((entry) => {
-            entry.created = moment(entry.created).format('l');
+            entry.created = new Date(entry.created);
             return entry;
         })
     }
