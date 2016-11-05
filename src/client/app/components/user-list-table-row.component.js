@@ -8,6 +8,7 @@ function formatDate(data) {
 class UserListTableRow extends React.Component {
     render() {
         const data = this.props.tableData;
+        const activeUserCss = this.props.activeUser && (data.username === this.props.activeUser) ? 'active-user-highlighted' : '';
 
         const tableData = Object.keys(data).map(function(record, index) {
             let cellContent = data[record];
@@ -16,7 +17,7 @@ class UserListTableRow extends React.Component {
             return <td key={index}>{cellContent}</td>;
         });
 
-        return <tr>{tableData}</tr>
+        return <tr className={activeUserCss}>{tableData}</tr>
     }
 }
 

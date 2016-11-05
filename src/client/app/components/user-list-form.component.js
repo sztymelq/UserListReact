@@ -48,7 +48,6 @@ class userListForm extends React.Component {
 
     changeTableLimit(event) {
         const limit = event.target.value;
-        console.log('limit', limit);
         this.props.changeTableLimit(limit);
     }
 

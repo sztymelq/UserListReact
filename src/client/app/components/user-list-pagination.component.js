@@ -35,10 +35,10 @@ class Pagination extends React.Component {
         function computePaginationButtons() {
             const buttons = [];
             for (let i = 1; i <= config.pagesQuantity; i++) {
-                const linkClass = i === config.activePage ? 'button is-primary' : 'button';
+                const buttonCss = i === config.activePage ? 'button is-primary' : 'button';
 
                 buttons.push(<li key={i} onClick={that.selectPage(i)}>
-                    <a className={linkClass}>{i}</a>
+                    <a className={buttonCss}>{i}</a>
                 </li>)
             }
             return buttons;
@@ -47,9 +47,7 @@ class Pagination extends React.Component {
         return <nav className="pagination">
                 <a onClick={this.selectPreviousPage} className="button">Previous</a>
                 <a onClick={this.selectNextPage} className="button">Next</a>
-                <ul>
-                    {computePaginationButtons()}
-                </ul>
+                <ul>{computePaginationButtons()}</ul>
             </nav>
     }
 }

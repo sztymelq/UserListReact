@@ -53,7 +53,7 @@ class UserList extends React.Component {
                     <TableRow tableData={Object.keys(tableHeaders)}
                               onClick={this.tableHeaderClicked}></TableRow>
                     </thead>
-                    <TableBody tableRows={this.props.usersData}></TableBody>
+                    <TableBody activeUser={this.props.activeUser} tableRows={this.props.usersData}></TableBody>
                 </table>
                 <Pagination onPageSelected={this.props.selectPage} config={this.props.pagination}></Pagination>
             </div>

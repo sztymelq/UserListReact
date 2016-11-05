@@ -6,7 +6,8 @@ import {combineReducers} from 'redux';
 const reducers = combineReducers({
     usersData: UserListReducer,
     filter: FilterReducer,
-    pagination: PaginationReducer
+    pagination: PaginationReducer,
+    activeUser: () => 'Daniels Martin'
 });
 
 export default reducers;

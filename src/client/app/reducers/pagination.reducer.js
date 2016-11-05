@@ -6,18 +6,24 @@ export default function (state, action) {
         pageNo: 0
     };
 
+    let paginationConfig;
+
     switch (action.type) {
         case actions.constants.PAGE_SELECTED:
-            const pageNoSelected = action.data - 1;
-            return Object.assign({}, state, {
-                pageNo: pageNoSelected
-            });
+            const pageNumberSelected = action.data - 1;
+            paginationConfig = {
+                pageNo: pageNumberSelected
+            };
+            break;
         case actions.constants.TABLE_LIMIT_CHANGED:
-            console.log('TABLE_LIMIT_CHANGED', action.data);
-            return Object.assign({}, state, {
+            paginationConfig = {
                 limitTo: action.data
-            });
+            };
+            break;
         default:
             return state;
+            break;
     }
+
+    return Object.assign({}, state, paginationConfig);
 }
