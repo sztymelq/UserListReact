@@ -3,7 +3,8 @@ const constants = Object.freeze({
     NEW_ENTRIES: 'USER_LIST_NEW_ENTRIES',
     FILTER_ENTRIES: 'FILTER_ENTRIES',
     SORT_TABLE: 'SORT_TABLE',
-    PAGE_SELECTED: 'PAGE_SELECTED'
+    PAGE_SELECTED: 'PAGE_SELECTED',
+    TABLE_LIMIT_CHANGED: 'TABLE_LIMIT_CHANGED'
 });
 
 const actions = {
@@ -12,6 +13,7 @@ const actions = {
     filterEntries: (data) => ({type: constants.FILTER_ENTRIES, data}),
     sortTable: (data) => ({type: constants.SORT_TABLE, data}),
     selectPage: (data) => ({type: constants.PAGE_SELECTED, data}),
+    changeTableLimit: (data) => ({type: constants.TABLE_LIMIT_CHANGED, data}),
     constants
 };
 

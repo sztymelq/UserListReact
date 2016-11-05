@@ -49,6 +49,9 @@ const methodsProps = (dispatch) => {
         },
         selectPage: (number) => {
             dispatch(actions.selectPage(number))
+        },
+        changeTableLimit: (limit) => {
+            dispatch(actions.changeTableLimit(limit))
         }
     }
 };

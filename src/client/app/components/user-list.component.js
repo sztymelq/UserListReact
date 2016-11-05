@@ -42,7 +42,10 @@ class UserList extends React.Component {
 
     render() {
         return <div>
-            <UserListForm addEntry={this.props.addEntry}></UserListForm>
+            <UserListForm addEntry={this.props.addEntry}
+                          changeTableLimit={this.props.changeTableLimit}
+                          tableLimit={this.props.pagination.limitTo}>
+            </UserListForm>
 
             <div className='user-list-table-container'>
                 <table className='table'>

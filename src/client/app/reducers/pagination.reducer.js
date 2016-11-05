@@ -6,10 +6,18 @@ export default function (state, action) {
         pageNo: 0
     };
 
-    if (action.type !== actions.constants.PAGE_SELECTED) return state;
-
-    const pageNoSelected = action.data - 1;
-    return Object.assign({}, state, {
-        pageNo: pageNoSelected
-    });
+    switch (action.type) {
+        case actions.constants.PAGE_SELECTED:
+            const pageNoSelected = action.data - 1;
+            return Object.assign({}, state, {
+                pageNo: pageNoSelected
+            });
+        case actions.constants.TABLE_LIMIT_CHANGED:
+            console.log('TABLE_LIMIT_CHANGED', action.data);
+            return Object.assign({}, state, {
+                limitTo: action.data
+            });
+        default:
+            return state;
+    }
 }

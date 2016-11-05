@@ -46,7 +46,7 @@ class Pagination extends React.Component {
 
         return <nav className="pagination">
                 <a onClick={this.selectPreviousPage} className="button">Previous</a>
-                <a onClick={this.selectNextPage} className="button">Next page</a>
+                <a onClick={this.selectNextPage} className="button">Next</a>
                 <ul>
                     {computePaginationButtons()}
                 </ul>
