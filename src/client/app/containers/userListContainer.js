@@ -13,8 +13,9 @@ function filterTableData(userData, filterQuery) {
 }
 
 function reduceDataToPage(data, limitTo, pageNo) {
-    const start = pageNo * limitTo;
-    return data.slice(start, start + limitTo);
+    const limit = Number(limitTo);
+    const start = Number(pageNo) * limit;
+    return data.slice(start, start + limit);
 }
 
 function computePaginationConfig(tableData, pagination) {
