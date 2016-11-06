@@ -50,8 +50,9 @@ class UserList extends React.Component {
             <div className='user-list-table-container'>
                 <table className='table'>
                     <thead onClick={this.tableHeaderClicked}>
-                    <TableRow tableData={Object.keys(tableHeaders)}
-                              onClick={this.tableHeaderClicked}></TableRow>
+                        <TableRow tableData={Object.keys(tableHeaders)}
+                              onClick={this.tableHeaderClicked}>
+                        </TableRow>
                     </thead>
                     <TableBody activeUser={this.props.activeUser} tableRows={this.props.usersData}></TableBody>
                 </table>
