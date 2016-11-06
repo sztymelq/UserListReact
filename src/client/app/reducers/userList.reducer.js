@@ -1,14 +1,11 @@
 import actions from '../actions/actions.js'
 
-
 export default function (state, action) {
-    console.log(action, state);
-
     if (typeof state === 'undefined') return [];
 
     switch (action.type) {
         case actions.constants.NEW_ENTRIES:
-            state = [].concat(convertDates(action.data));
+            state = [].concat(decorateDateString(action.data));
             break;
         case actions.constants.ENTRY_ADDED:
             state = [].concat(action.data).concat(state);
@@ -21,17 +18,15 @@ export default function (state, action) {
     }
 
     function sortTable(target, sortedProperty, desc) {
-        return target.sort(compare);
-
-        function compare(a, b) {
+        return target.sort((a, b) => {
             const result = a[sortedProperty] < b[sortedProperty] ? 1 : -1;
 
             if (desc) return result;
             else return -result;
-        }
+        });
     }
 
-    function convertDates(data) {
+    function decorateDateString(data) {
         return data.map((entry) => {
             entry.created = new Date(entry.created);
             return entry;
